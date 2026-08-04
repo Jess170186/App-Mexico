@@ -1,0 +1,79 @@
+{
+  "updated_at": "2026-08-04T14:00:00Z",
+  "count": 6,
+  "note": "Exemple de sortie de l'agrégateur. Régénéré automatiquement par aggregator.py avec la clé API Claude.",
+  "events": [
+    {
+      "title": "Festival de Jazz en la playa",
+      "date_start": "2026-08-08",
+      "date_end": "2026-08-10",
+      "location": "Playa del Carmen · Playa Mamitas",
+      "category": "Música",
+      "description": "Tres días de conciertos gratuitos frente al mar, con line-up internacional, food trucks y zona familiar.",
+      "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=75",
+      "source_url": "https://siturq.gob.mx/eventos",
+      "source_name": "SITUR Quintana Roo",
+      "region": "Quintana Roo"
+    },
+    {
+      "title": "Feria gastronómica maya",
+      "date_start": "2026-08-09",
+      "date_end": "",
+      "location": "Mérida · Plaza Grande",
+      "category": "Gastronomía",
+      "description": "Cocineras tradicionales, artesanía y música en vivo en el corazón de Mérida.",
+      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=75",
+      "source_url": "https://www.merida.gob.mx/eventos",
+      "source_name": "Ayuntamiento de Mérida",
+      "region": "Yucatán"
+    },
+    {
+      "title": "Noche de trova yucateca",
+      "date_start": "2026-08-10",
+      "date_end": "",
+      "location": "Mérida · Santa Lucía",
+      "category": "Cultura",
+      "description": "Velada de trova tradicional al aire libre en el parque de Santa Lucía.",
+      "image": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=75",
+      "source_url": "https://www.yucatan.gob.mx/",
+      "source_name": "Gobierno de Yucatán",
+      "region": "Yucatán"
+    },
+    {
+      "title": "Mercado nocturno & DJ set",
+      "date_start": "2026-08-12",
+      "date_end": "",
+      "location": "Tulum · Aldea Zamá",
+      "category": "Fiesta",
+      "description": "Mercado de diseño local y sesión de DJ al caer la noche en Aldea Zamá.",
+      "image": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=75",
+      "source_url": "https://quintanaroohoy.com/cultura/",
+      "source_name": "Quintana Roo Hoy",
+      "region": "Quintana Roo"
+    },
+    {
+      "title": "Regata & feria náutica",
+      "date_start": "2026-08-15",
+      "date_end": "",
+      "location": "Bacalar · Laguna de 7 colores",
+      "category": "Deporte",
+      "description": "Regata y actividades náuticas para toda la familia en la laguna de Bacalar.",
+      "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=75",
+      "source_url": "https://siturq.gob.mx/eventos",
+      "source_name": "SITUR Quintana Roo",
+      "region": "Quintana Roo"
+    },
+    {
+      "title": "Exposición de arte contemporáneo",
+      "date_start": "2026-08-18",
+      "date_end": "2026-08-30",
+      "location": "Mérida · Centro Histórico",
+      "category": "Arte",
+      "description": "Muestra colectiva de artistas de la península en una galería del centro histórico.",
+      "image": "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=75",
+      "source_url": "https://www.merida.gob.mx/eventos",
+      "source_name": "Ayuntamiento de Mérida",
+      "region": "Yucatán"
+    }
+  ]
+}

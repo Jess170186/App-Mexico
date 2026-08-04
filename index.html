@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App Mexico — Salea</title>
+<style>
+  :root{--teal:#0f7d7b;--teal2:#0b5c5b;--deep:#083b3d;--deep2:#05282a;--gold:#c7a24c;--gold-l:#e6cd84;--gold-d:#9c7a2e;--cream:#f2e8d6;--ivory:#fdf8ee;--line:#e7d9bf;--ink:#152a2b;--muted:#7c8a86}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:radial-gradient(1200px 800px at 50% 20%,#0f6b6a 0%,#083b3d 55%,#05282a 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:34px 16px 54px;color:var(--ink)}
+  .head{max-width:820px;text-align:center;color:#eafaf7;margin-bottom:26px}
+  .head .wm{font-family:"Snell Roundhand","Segoe Script","Brush Script MT",cursive;font-size:40px;color:var(--gold-l);line-height:1}
+  .head h1{font-size:15px;letter-spacing:4px;text-transform:uppercase;margin-top:8px;color:#cfeae6;font-weight:600}
+  .head p{font-size:13px;opacity:.8;margin-top:10px}
+  .stage{display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap;max-width:1320px}
+  .col{display:flex;flex-direction:column;gap:22px;width:250px}
+  .col.left{align-items:flex-end}
+  .badge{width:250px;background:linear-gradient(160deg,#fffdf8,#f4ead6);border-radius:20px;padding:16px 16px 16px 14px;display:flex;align-items:center;gap:13px;box-shadow:0 18px 34px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.9);position:relative}
+  .badge::before{content:"";position:absolute;inset:2px;border-radius:18px;border:1px solid rgba(199,162,76,.25);pointer-events:none}
+  .medal{flex:none;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fffef9,#efe2c6 70%);box-shadow:inset 0 2px 4px rgba(255,255,255,.9),0 4px 10px rgba(156,122,46,.25);display:flex;align-items:center;justify-content:center;color:var(--gold-d)}
+  .medal svg{width:28px;height:28px}
+  .badge .bt b{display:block;font-size:14px;color:var(--teal2);letter-spacing:.3px;font-weight:800}
+  .badge .bt span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+  .phone{width:372px;max-width:100%;height:770px;background:#0c0c0d;border-radius:50px;padding:11px;box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 2px rgba(199,162,76,.18);position:relative;flex:none}
+  .screen{width:100%;height:100%;background:var(--cream);border-radius:40px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:132px;height:28px;background:#0c0c0d;border-radius:0 0 18px 18px;z-index:60}
+  .statusbar{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 28px;font-size:12.5px;font-weight:600;color:var(--ink);flex:none;z-index:20}
+  .appbar{padding:2px 20px 8px;text-align:center;flex:none}
+  .appbar .wm{font-family:"Snell Roundhand","Segoe Script","Brush Script MT",cursive;font-size:30px;color:var(--teal2);line-height:1}
+  .flags{display:inline-flex;align-items:center;gap:2px;margin-top:8px;background:#fff;border:1px solid var(--line);padding:4px 10px;border-radius:20px;font-size:15px;box-shadow:0 2px 6px rgba(0,0,0,.05);position:relative}
+  .flags::before,.flags::after{content:"";position:absolute;top:50%;width:9px;height:9px;background:#fff;border:1px solid var(--line);transform:translateY(-50%) rotate(45deg)}
+  .flags::before{left:-5px;border-right:none;border-top:none}.flags::after{right:-5px;border-left:none;border-bottom:none}
+  .flag{cursor:pointer;padding:2px 3px;border-radius:8px;opacity:.4;transition:.15s;line-height:1}
+  .flag.on{opacity:1;background:#f0e6cf}
+  .views{flex:1;overflow-y:auto;overflow-x:hidden}
+  .views::-webkit-scrollbar{display:none}
+  .view{display:none;padding:6px 18px 24px;animation:fade .3s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .caps{text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-d);font-weight:700;margin:8px 0 12px}
+  .caps small{font-size:8px;color:var(--muted);letter-spacing:1px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .tile{background:var(--ivory);border:1px solid var(--line);border-radius:16px;padding:12px 6px 9px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:.15s;box-shadow:0 3px 8px rgba(20,42,43,.05)}
+  .tile:active{transform:scale(.95)}
+  .tile .ic{width:32px;height:32px;color:var(--gold-d)}.tile .ic svg{width:32px;height:32px}
+  .tile span{font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--teal2);font-weight:700;text-align:center}
+  .autobar{margin-top:14px;background:linear-gradient(135deg,var(--teal2),var(--deep));border-radius:16px;padding:13px 14px;color:#eafaf7;display:flex;align-items:center;gap:11px}
+  .autobar .ab-ic{flex:none;width:34px;height:34px;border-radius:10px;background:rgba(230,205,132,.16);display:flex;align-items:center;justify-content:center;color:var(--gold-l)}
+  .autobar .ab-ic svg{width:19px;height:19px}
+  .autobar b{font-size:12px;display:block}.autobar span{font-size:10.5px;opacity:.82;display:block;margin-top:2px}
+  .carousel{margin-top:4px;overflow:hidden;position:relative;-webkit-mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+  .ctrack{display:flex;gap:12px;width:max-content;animation:cscroll 30s linear infinite}
+  .carousel:hover .ctrack{animation-play-state:paused}
+  @keyframes cscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .ccard{flex:none;width:148px;background:var(--ivory);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;box-shadow:0 3px 8px rgba(20,42,43,.05)}
+  .ccard .cimg{height:86px;position:relative}
+  .ccard .cb{padding:8px 10px 10px}
+  .ccard .ct{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gold-d)}
+  .ccard h4{font-size:12px;color:var(--ink);margin-top:2px;line-height:1.2}
+  h2.sec{font-family:Georgia,serif;font-size:17px;color:var(--teal2);margin:16px 2px 10px;display:flex;justify-content:space-between;align-items:baseline}
+  .evt{display:flex;gap:11px;align-items:center;background:var(--ivory);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:10px;cursor:pointer;transition:.15s;box-shadow:0 3px 8px rgba(20,42,43,.05)}
+  .evt:active{transform:scale(.985)}
+  .evt .date{flex:none;width:48px;height:56px;border-radius:12px;background:linear-gradient(150deg,var(--teal),var(--teal2));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 -8px 14px rgba(0,0,0,.12)}
+  .evt .date .d{font-size:20px;font-weight:800;line-height:1;font-family:Georgia,serif}
+  .evt .date .m{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:2px;opacity:.9}
+  .evt .info{flex:1;min-width:0}.evt .info h3{font-size:13.5px;margin-bottom:3px;color:var(--ink);line-height:1.2}
+  .evt .info .loc{font-size:11px;color:var(--muted);margin-bottom:6px}
+  .evt .info .row{display:flex;gap:6px;flex-wrap:wrap}
+  .ethumb{flex:none;width:58px;height:58px;border-radius:12px;overflow:hidden;position:relative;background:linear-gradient(135deg,var(--teal),var(--teal2))}
+  .pill{font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:#f0e6cf;color:var(--gold-d);letter-spacing:.4px;text-transform:uppercase}
+  .cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:2}
+  .wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.36;z-index:1;pointer-events:none}
+  .wm svg{width:44px;height:44px}.wm.wm-s svg{width:24px;height:24px}
+  .news{background:var(--ivory);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-bottom:12px;cursor:pointer;box-shadow:0 4px 12px rgba(20,42,43,.06)}
+  .news .img{height:120px;position:relative;background:linear-gradient(135deg,var(--teal),var(--teal2))}
+  .news .tag{position:absolute;top:9px;left:9px;background:rgba(8,59,61,.82);color:var(--gold-l);font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;z-index:2}
+  .news .body{padding:11px 13px 13px}
+  .news .src{font-size:9.5px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .news h3{font-size:14px;line-height:1.3;color:var(--ink)}
+  .news.spon{border:1.5px solid var(--gold)}
+  .spon-badge{position:absolute;top:9px;right:9px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#fff;font-size:8.5px;font-weight:800;padding:4px 9px;border-radius:20px;letter-spacing:.5px;z-index:2}
+  /* Filters */
+  .filterbar{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+  .frow{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+  .frow::-webkit-scrollbar{display:none}
+  .fchip{flex:none;padding:6px 12px;border-radius:20px;background:var(--ivory);border:1px solid var(--line);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .fchip.on{background:var(--teal2);color:#fff;border-color:var(--teal2)}
+  /* Place card */
+  .place{display:flex;gap:11px;align-items:center;background:var(--ivory);border:1px solid var(--line);border-radius:16px;padding:10px;margin-bottom:9px;cursor:pointer;box-shadow:0 3px 8px rgba(20,42,43,.05)}
+  .place:active{transform:scale(.99)}
+  .pthumb{flex:none;width:56px;height:56px;border-radius:12px;overflow:hidden;position:relative}
+  .place .pi{flex:1;min-width:0}
+  .place .pi h3{font-size:13.5px;color:var(--ink);margin-bottom:2px;line-height:1.2}
+  .place .pi .sub{font-size:11px;color:var(--muted)}
+  .place .pi .rl{display:flex;gap:10px;align-items:center;margin-top:5px}
+  .place .pi .rate{font-size:11px;color:var(--gold-d);font-weight:700}
+  .wifiTag{font-size:9px;color:var(--teal);font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+  .heart{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#c9b48a}
+  .heart svg{width:19px;height:19px}
+  .heart.on{color:#e2574c;border-color:#f2c9c4;background:#fdeeec}
+  .heart.on svg{fill:#e2574c}
+  .empty{text-align:center;color:var(--muted);font-size:12.5px;padding:34px 24px;line-height:1.6}
+  .empty .big{font-size:30px;margin-bottom:8px;opacity:.5}
+  /* FAB */
+  .fab{position:absolute;right:16px;bottom:84px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));box-shadow:0 8px 18px rgba(156,122,46,.4);display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;z-index:40}
+  .fab svg{width:24px;height:24px;fill:#fff;stroke:#fff}
+  .fab .cnt{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:var(--teal2);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px;border:2px solid var(--cream)}
+  /* Map */
+  .mapwrap{position:relative;width:100%;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+  .mapwrap svg{display:block;width:100%;height:auto}
+  .dot{position:absolute;width:15px;height:15px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.4);cursor:pointer;transition:.1s;z-index:3}
+  .dot:hover{transform:translate(-50%,-50%) scale(1.35);z-index:5}
+  .maplegend{display:flex;flex-wrap:wrap;gap:9px;margin-top:11px;font-size:10px;color:var(--muted)}
+  .maplegend span{display:flex;align-items:center;gap:4px}
+  .maplegend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .mapcount{text-align:center;font-size:11px;color:var(--muted);margin-top:8px}
+  .panel{background:var(--ivory);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 6px 16px rgba(20,42,43,.07);margin-top:6px}
+  .price{font-family:Georgia,serif;font-size:42px;font-weight:700;color:var(--teal2);text-align:center;line-height:1}
+  .price small{font-size:15px;color:var(--muted)}
+  .feat{display:flex;gap:9px;align-items:flex-start;margin:12px 0;font-size:12.5px;color:var(--ink)}
+  .feat .ck{color:var(--gold-d);font-weight:800}
+  .btn{display:block;width:100%;text-align:center;padding:14px;border-radius:15px;border:none;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#fff;font-size:14px;font-weight:800;letter-spacing:.5px;cursor:pointer;margin-top:12px;box-shadow:0 8px 18px rgba(156,122,46,.35)}
+  .tier{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:11px;background:var(--ivory)}
+  .tier.best{border:1.5px solid var(--gold)}
+  .tier h4{font-family:Georgia,serif;font-size:15px;color:var(--teal2);display:flex;justify-content:space-between;align-items:center}
+  .tier .amt{color:var(--gold-d);font-weight:800}
+  .tier ul{list-style:none;margin-top:7px}
+  .tier li{font-size:11.5px;color:var(--muted);padding:3px 0 3px 16px;position:relative}
+  .tier li::before{content:"✦";position:absolute;left:0;color:var(--gold);font-size:9px;top:4px}
+  .ribbon{display:inline-block;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#fff;font-size:8.5px;font-weight:800;padding:3px 9px;border-radius:6px;letter-spacing:.6px;margin-bottom:6px}
+  .tabbar{flex:none;height:70px;background:rgba(253,248,238,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;padding:8px 6px 18px}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--muted);font-size:9.5px;font-weight:700;letter-spacing:.3px}
+  .tab .ti{width:22px;height:22px}.tab .ti svg{width:22px;height:22px}
+  .tab.on{color:var(--gold-d)}
+  .modal{position:absolute;inset:0;background:rgba(8,40,42,.5);z-index:80;display:none;align-items:flex-end}
+  .modal.show{display:flex}
+  .sheet{background:var(--cream);width:100%;max-height:84%;border-radius:26px 26px 0 0;overflow-y:auto;animation:up .3s ease}
+  .sheet::-webkit-scrollbar{display:none}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .sheet .hero{height:170px;position:relative;background:linear-gradient(135deg,var(--teal),var(--teal2))}
+  .sheet .hchip{position:absolute;left:14px;bottom:12px;background:rgba(8,40,42,.7);color:var(--gold-l);font-size:10px;font-weight:700;padding:5px 11px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;z-index:2}
+  .sheet .close{position:absolute;top:13px;right:13px;width:32px;height:32px;border-radius:50%;background:rgba(8,40,42,.55);color:#fff;border:none;font-size:17px;cursor:pointer;z-index:2}
+  .sheet .sc{padding:18px}
+  .sheet h2{font-family:Georgia,serif;font-size:20px;color:var(--teal2);margin-bottom:6px}
+  .sheet .m2{font-size:12px;color:var(--muted);display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+  .sheet p.desc{font-size:13px;line-height:1.6;color:#33413f}
+  .srcbar{display:flex;align-items:center;gap:8px;background:var(--ivory);border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin:13px 0;font-size:11px;color:var(--teal2)}
+  .srcbar .d{width:8px;height:8px;border-radius:50%;background:#1c8a4e}
+  .social{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+  .social a{flex:1 1 28%;text-align:center;padding:10px;border-radius:12px;background:var(--ivory);border:1px solid var(--line);font-size:11.5px;font-weight:700;color:var(--teal2);text-decoration:none;cursor:pointer}
+  .stamp{margin-top:26px;color:#bfe2dd;font-size:12px;display:flex;align-items:center;gap:7px}
+  .stamp .dot{position:static;width:8px;height:8px;border-radius:50%;background:#7CF3C4;box-shadow:0 0 8px #7CF3C4;border:none;transform:none}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="phone"><div class="screen">
+      <div class="notch"></div>
+      <div class="statusbar"><span>9:41</span><span>📶 &nbsp;🔋</span></div>
+      <div class="appbar">
+        <div class="flags" id="flags">
+          <span class="flag on" data-l="es" onclick="setLang('es')">🇪🇸</span>
+          <span class="flag" data-l="en" onclick="setLang('en')">🇺🇸</span>
+          <span class="flag" data-l="fr" onclick="setLang('fr')">🇫🇷</span>
+          <span class="flag" data-l="it" onclick="setLang('it')">🇮🇹</span>
+          <span class="flag" data-l="de" onclick="setLang('de')">🇩🇪</span>
+        </div>
+      </div>
+
+      <div class="views" id="views">
+        <div class="view active" id="v-home">
+          <div class="caps" data-i18n="caps_home">Descubre México</div>
+          <div class="grid" id="grid"></div>
+          <div class="caps" id="carCap" style="margin-top:18px"></div>
+          <div class="carousel" id="carousel"></div>
+        </div>
+
+        <div class="view" id="v-agenda">
+          <div class="caps"><span data-i18n="caps_agenda">Agenda de eventos</span> <small id="agendaStamp"></small></div>
+          <div id="agendaList"></div>
+        </div>
+
+        <div class="view" id="v-news">
+          <div class="caps" data-i18n="caps_news">Novedades</div>
+          <div class="news spon" onclick="openEvent()"><span class="spon-badge">★ <span data-i18n="sponsored">PATROCINADO</span></span>
+            <div class="img" style="background:linear-gradient(140deg,#c7a24c,#9c7a2e)"><div class="wm">__ICON_star__</div><img class="cover" src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&q=70" loading="lazy" onerror="this.remove()"></div>
+            <div class="body"><div class="src">Casa Malca · Tulum</div><h3>Nuevo menú de temporada + noche de mezcal</h3></div>
+          </div>
+          <div id="newsList"></div>
+        </div>
+
+        <div class="view" id="v-list">
+          <div class="caps" id="listTitle">Restaurantes</div>
+          <div class="filterbar" id="listFilter"></div>
+          <div id="listItems"></div>
+        </div>
+
+        <div class="view" id="v-fav">
+          <div class="caps" data-i18n="fav_title">Mis favoritos</div>
+          <div class="filterbar" id="favFilter"></div>
+          <div id="favItems"></div>
+        </div>
+
+        <div class="view" id="v-map">
+          <div class="caps" data-i18n="map_title">Mapa</div>
+          <div class="filterbar" id="mapFilter"></div>
+          <div class="mapwrap" id="mapwrap"></div>
+          <div class="mapcount" id="mapCount"></div>
+          <div class="maplegend" id="mapLegend"></div>
+        </div>
+
+        <div class="view" id="v-plans">
+          <div class="caps" data-i18n="caps_plans">Suscripción</div>
+          <div class="panel"><div class="price">$3<small>/<span data-i18n="month">mes</span></small></div>
+            <p style="text-align:center;font-size:11.5px;color:var(--muted);margin-top:4px" data-i18n="plan_sub">o $30/año — 2 meses gratis</p>
+            <div class="feat"><span class="ck">✦</span> <span data-i18n="f1">Agenda completa sin anuncios</span></div>
+            <div class="feat"><span class="ck">✦</span> <span data-i18n="f2">Favoritos y recomendaciones a tu medida</span></div>
+            <div class="feat"><span class="ck">✦</span> <span data-i18n="f3">Descuentos exclusivos de patrocinadores</span></div>
+            <button class="btn" data-i18n="cta_trial">Prueba gratis de 7 días</button>
+          </div>
+          <h2 class="sec" style="margin-top:20px" data-i18n="for_sponsors">Para patrocinadores</h2>
+          <div class="tier"><h4><span data-i18n="tier1">Presencia</span> <span class="amt">$490/<span data-i18n="year">año</span></span></h4><ul><li data-i18n="t1a">Ficha destacada en su categoría</li><li data-i18n="t1b">Enlace a sus redes sociales</li></ul></div>
+          <div class="tier best"><span class="ribbon" data-i18n="popular">MÁS POPULAR</span><h4><span data-i18n="tier2">Prioridad</span> <span class="amt">$1 290/<span data-i18n="year">año</span></span></h4><ul><li data-i18n="t2a">1er lugar en categoría y recomendaciones</li><li data-i18n="t2b">Publicar novedades y promos</li><li data-i18n="t2c">Banner en portada + estadísticas</li></ul></div>
+        </div>
+      </div>
+
+      <div class="fab" id="fab" onclick="goFav()">__ICON_heart__<span class="cnt" id="favCnt">0</span></div>
+
+      <div class="tabbar">
+        <div class="tab on" data-v="home" onclick="showView('home')"><div class="ti">__ICON_home__</div><span data-i18n="tab_home">Inicio</span></div>
+        <div class="tab" data-v="agenda" onclick="showView('agenda')"><div class="ti">__ICON_calendar__</div><span data-i18n="tab_agenda">Agenda</span></div>
+        <div class="tab" data-v="map" onclick="showView('map')"><div class="ti">__ICON_map__</div><span data-i18n="map_title">Mapa</span></div>
+        <div class="tab" data-v="fav" onclick="showView('fav')"><div class="ti">__ICON_heart__</div><span data-i18n="fav_short">Favoritos</span></div>
+      </div>
+      <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+    </div></div>
+
+  </div>
+
+
+<script>
+  const ICONS={
+    home:'<path d="M4 11l8-7 8 7M6 10v10h5v-6h2v6h5V10"/>',
+    calendar:'<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+    ticket:'<path d="M4 8.5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2H6a2 2 0 0 1-2-2 2 2 0 0 0 0-4z"/><path d="M14.5 7v10"/>',
+    fork:'<path d="M6.5 3v6a2 2 0 0 0 4 0V3M8.5 9v12M16 3c-1.4 0-2.3 1.6-2.3 4s.9 4 2.3 4v10"/>',
+    camera:'<rect x="3" y="7.5" width="18" height="12.5" rx="2.5"/><circle cx="12" cy="13.5" r="3.3"/><path d="M8.2 7.5l1.4-3h4.8l1.4 3"/>',
+    beach:'<path d="M12 3.5a8.5 8.5 0 0 1 8.5 8.5H3.5A8.5 8.5 0 0 1 12 3.5zM12 12v8.5M8.5 20.5h7"/>',
+    train:'<rect x="6" y="3.5" width="12" height="13" rx="2.5"/><path d="M6 11h12M8.5 21l1.5-4M15.5 21l-1.5-4"/><circle cx="9.5" cy="13.7" r=".7"/><circle cx="14.5" cy="13.7" r=".7"/>',
+    cocktail:'<path d="M4.5 4.5h15l-7.5 8zM12 12.5v6M8 20.5h8"/>',
+    bag:'<path d="M6 8h12l-1 12.5H7zM9 8V6a3 3 0 0 1 6 0v2"/>',
+    wifi:'<path d="M4.5 12a10.5 10.5 0 0 1 15 0M7.5 15a6 6 0 0 1 9 0M12 18.5h.02"/>',
+    pin:'<path d="M12 21.5s-7-6.2-7-11.2A7 7 0 0 1 19 10.3c0 5-7 11.2-7 11.2z"/><circle cx="12" cy="10" r="2.6"/>',
+    star:'<path d="M12 3l2.6 5.7 6.2.7-4.6 4.2 1.2 6.1L12 16.8l-5.4 2.9 1.2-6.1L3.2 9.4l6.2-.7z"/>',
+    crown:'<path d="M4 8.5l3.6 3.2L12 5l4.4 6.7L20 8.5l-1.6 10.5H5.6z"/>',
+    bolt:'<path d="M13 3L5.5 13H11l-1 8 8.5-10.5H13z"/>',
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z"/>',
+    shield:'<path d="M12 3l7 3v6c0 4.2-3 7.4-7 9-4-1.6-7-4.8-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
+    tag:'<path d="M3.5 12.5l9-9 8 8-9 9-8-8z"/><circle cx="9" cy="9" r="1.3"/>',
+    music:'<path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>',
+    palette:'<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2 0-1.4 1-2 2-2h2a3 3 0 0 0 3-3 8 8 0 0 0-11-9z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16" cy="10.5" r="1"/>',
+    heart:'<path d="M12 20s-7-4.6-9.2-8.4C1.2 8.4 3 5 6.2 5c2 0 3.2 1.3 3.8 2.3C10.6 6.3 12 5 14 5c3.2 0 5 3.4 3.2 6.6C19 15.4 12 20 12 20z"/>',
+    map:'<path d="M9 4L3 6.2v14L9 18l6 2 6-2.2v-14L15 6 9 4z"/><path d="M9 4v14M15 6v14"/>'
+  };
+  function svg(n){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[n]||'')+'</svg>';}
+  document.body.innerHTML=document.body.innerHTML.replace(/__ICON_(\w+)__/g,(m,n)=>svg(n));
+
+  /* ---------- i18n ---------- */
+  const T={
+    es:{caps_home:'Descubre México',auto_t:'Actualización automática',auto_s:'La app publica los eventos sola, en las 2 regiones.',caps_agenda:'Agenda de eventos',caps_news:'Novedades',caps_plans:'Suscripción',sponsored:'PATROCINADO',month:'mes',plan_sub:'o $30/año — 2 meses gratis',f1:'Agenda completa sin anuncios',f2:'Favoritos y recomendaciones a tu medida',f3:'Descuentos exclusivos de patrocinadores',cta_trial:'Prueba gratis de 7 días',for_sponsors:'Para patrocinadores',tier1:'Presencia',tier2:'Prioridad',year:'año',popular:'MÁS POPULAR',t1a:'Ficha destacada en su categoría',t1b:'Enlace a sus redes sociales',t2a:'1er lugar en categoría y recomendaciones',t2b:'Publicar novedades y promos',t2c:'Banner en portada + estadísticas',tab_home:'Inicio',tab_agenda:'Agenda',tab_news:'Novedades',tab_plans:'Planes',src_auto:'Publicado automáticamente',src_spon:'Contenido del patrocinador',btn_src:'Ver fuente',btn_ig:'Instagram',btn_share:'Compartir',btn_add:'Agregar a mi agenda',fav_title:'Mis favoritos',fav_short:'Favoritos',fav_empty:'Aún no tienes favoritos.\\nToca el ♥ en cualquier lugar para guardarlo aquí.',all_regions:'Todo',all_cities:'Todas',map_title:'Mapa',eventos:'Eventos',novedades:'Novedades',fav_add:'♥ Guardar',fav_remove:'♥ Quitar',see_map:'Ver en el mapa',results:'lugares',cats:['Restaurantes','Actividades','Playas','Transporte','Bares','Compras','WiFi']},
+    en:{caps_home:'Discover Mexico',auto_t:'Automatic updates',auto_s:'The app posts events on its own, across both regions.',caps_agenda:'Events agenda',caps_news:'What’s new',caps_plans:'Subscription',sponsored:'SPONSORED',month:'mo',plan_sub:'or $30/year — 2 months free',f1:'Full agenda, ad-free',f2:'Favorites and tailored picks',f3:'Exclusive sponsor deals',cta_trial:'Start 7-day free trial',for_sponsors:'For sponsors',tier1:'Presence',tier2:'Priority',year:'yr',popular:'MOST POPULAR',t1a:'Featured listing in your category',t1b:'Link to your social networks',t2a:'Top spot in category and picks',t2b:'Publish news and promos',t2c:'Home banner + analytics',tab_home:'Home',tab_agenda:'Agenda',tab_news:'News',tab_plans:'Plans',src_auto:'Auto-published',src_spon:'Sponsor content',btn_src:'View source',btn_ig:'Instagram',btn_share:'Share',btn_add:'Add to my agenda',fav_title:'My favorites',fav_short:'Favorites',fav_empty:'No favorites yet.\\nTap the ♥ on any place to save it here.',all_regions:'All',all_cities:'All cities',map_title:'Map',eventos:'Events',novedades:'News',fav_add:'♥ Save',fav_remove:'♥ Remove',see_map:'See on map',results:'places',cats:['Restaurants','Activities','Beaches','Transport','Bars','Shopping','Free WiFi']},
+    fr:{caps_home:'Découvre le Mexique',auto_t:'Mise à jour automatique',auto_s:'L’app publie les événements toute seule, dans les 2 régions.',caps_agenda:'Agenda des événements',caps_news:'Nouveautés',caps_plans:'Abonnement',sponsored:'SPONSORISÉ',month:'mois',plan_sub:'ou 30 $/an — 2 mois offerts',f1:'Agenda complet sans publicité',f2:'Favoris et recommandations sur mesure',f3:'Réductions exclusives des commanditaires',cta_trial:'Essai gratuit de 7 jours',for_sponsors:'Pour les commanditaires',tier1:'Présence',tier2:'Priorité',year:'an',popular:'LE PLUS POPULAIRE',t1a:'Fiche mise en avant dans ta catégorie',t1b:'Lien vers tes réseaux sociaux',t2a:'1re place en catégorie et recommandations',t2b:'Publier nouveautés et promos',t2c:'Bannière en accueil + statistiques',tab_home:'Accueil',tab_agenda:'Agenda',tab_news:'Actus',tab_plans:'Offres',src_auto:'Publié automatiquement',src_spon:'Contenu du commanditaire',btn_src:'Voir la source',btn_ig:'Instagram',btn_share:'Partager',btn_add:'Ajouter à mon agenda',fav_title:'Mes favoris',fav_short:'Favoris',fav_empty:'Aucun favori pour l’instant.\\nAppuie sur le ♥ d’un lieu pour l’enregistrer ici.',all_regions:'Tout',all_cities:'Toutes',map_title:'Carte',eventos:'Événements',novedades:'Actus',fav_add:'♥ Enregistrer',fav_remove:'♥ Retirer',see_map:'Voir sur la carte',results:'lieux',cats:['Restaurants','Activités','Plages','Transport','Bars','Shopping','WiFi gratuit']},
+    it:{caps_home:'Scopri il Messico',auto_t:'Aggiornamento automatico',auto_s:'L’app pubblica gli eventi da sola, nelle 2 regioni.',caps_agenda:'Agenda eventi',caps_news:'Novità',caps_plans:'Abbonamento',sponsored:'SPONSORIZZATO',month:'mese',plan_sub:'o 30 $/anno — 2 mesi gratis',f1:'Agenda completa senza pubblicità',f2:'Preferiti e consigli su misura',f3:'Sconti esclusivi degli sponsor',cta_trial:'Prova gratis di 7 giorni',for_sponsors:'Per gli sponsor',tier1:'Presenza',tier2:'Priorità',year:'anno',popular:'PIÙ POPOLARE',t1a:'Scheda in evidenza nella tua categoria',t1b:'Link ai tuoi social',t2a:'Primo posto in categoria e consigli',t2b:'Pubblica novità e promo',t2c:'Banner in home + statistiche',tab_home:'Home',tab_agenda:'Agenda',tab_news:'Novità',tab_plans:'Piani',src_auto:'Pubblicato automaticamente',src_spon:'Contenuto dello sponsor',btn_src:'Vedi fonte',btn_ig:'Instagram',btn_share:'Condividi',btn_add:'Aggiungi alla mia agenda',fav_title:'I miei preferiti',fav_short:'Preferiti',fav_empty:'Ancora nessun preferito.\\nTocca il ♥ su un luogo per salvarlo qui.',all_regions:'Tutto',all_cities:'Tutte',map_title:'Mappa',eventos:'Eventi',novedades:'Novità',fav_add:'♥ Salva',fav_remove:'♥ Rimuovi',see_map:'Vedi sulla mappa',results:'luoghi',cats:['Ristoranti','Attività','Spiagge','Trasporti','Bar','Shopping','WiFi gratis']},
+    de:{caps_home:'Entdecke Mexiko',auto_t:'Automatische Updates',auto_s:'Die App veröffentlicht Events automatisch in beiden Regionen.',caps_agenda:'Veranstaltungen',caps_news:'Neuigkeiten',caps_plans:'Abo',sponsored:'GESPONSERT',month:'Mon.',plan_sub:'oder 30 $/Jahr — 2 Monate gratis',f1:'Voller Kalender, werbefrei',f2:'Favoriten und passende Empfehlungen',f3:'Exklusive Sponsoren-Rabatte',cta_trial:'7 Tage gratis testen',for_sponsors:'Für Sponsoren',tier1:'Präsenz',tier2:'Priorität',year:'Jahr',popular:'AM BELIEBTESTEN',t1a:'Hervorgehobener Eintrag in deiner Kategorie',t1b:'Link zu deinen sozialen Netzwerken',t2a:'Erster Platz in Kategorie und Empfehlungen',t2b:'Neuigkeiten und Aktionen posten',t2c:'Startseiten-Banner + Statistiken',tab_home:'Start',tab_agenda:'Agenda',tab_news:'News',tab_plans:'Tarife',src_auto:'Automatisch veröffentlicht',src_spon:'Sponsoren-Inhalt',btn_src:'Quelle ansehen',btn_ig:'Instagram',btn_share:'Teilen',btn_add:'Zu meiner Agenda',fav_title:'Meine Favoriten',fav_short:'Favoriten',fav_empty:'Noch keine Favoriten.\\nTippe auf das ♥ eines Ortes, um ihn hier zu speichern.',all_regions:'Alle',all_cities:'Alle Städte',map_title:'Karte',eventos:'Events',novedades:'News',fav_add:'♥ Speichern',fav_remove:'♥ Entfernen',see_map:'Auf der Karte',results:'Orte',cats:['Restaurants','Aktivitäten','Strände','Transport','Bars','Shopping','Gratis-WLAN']}
+  };
+  const EVCAT={'Música':{en:'Music',fr:'Musique',it:'Musica',de:'Musik'},'Gastronomía':{en:'Food',fr:'Gastronomie',it:'Gastronomia',de:'Gastronomie'},'Cultura':{en:'Culture',fr:'Culture',it:'Cultura',de:'Kultur'},'Fiesta':{en:'Party',fr:'Fête',it:'Festa',de:'Party'},'Deporte':{en:'Sport',fr:'Sport',it:'Sport',de:'Sport'},'Arte':{en:'Art',fr:'Art',it:'Arte',de:'Kunst'},'Patrocinado':{en:'Sponsored',fr:'Sponsorisé',it:'Sponsorizzato',de:'Gesponsert'}};
+  const PC=['Restaurantes','Actividades','Playas','Transporte','Bares','Compras','WiFi']; // ordre = cats
+  let LANG='es';
+  function t(k){return (T[LANG]&&T[LANG][k]!==undefined)?T[LANG][k]:T.es[k];}
+  function tev(c){if(LANG==='es')return c;const m=EVCAT[c];return (m&&m[LANG])||c;}
+  function tcat(cat){const i=PC.indexOf(cat);return i>=0?t('cats')[i]:cat;}
+  function setLang(l){LANG=l;document.documentElement.lang=l;applyLang();}
+  function applyLang(){
+    document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n);});
+    document.querySelectorAll('.flag').forEach(f=>f.classList.toggle('on',f.dataset.l===LANG));
+    buildGrid();buildCarousel();renderAgenda();renderNews();renderActive();
+  }
+
+  /* ---------- Visuels par catégorie ---------- */
+  function vis(cat){
+    const M={'Música':['#6d4b9c','#3a2a63','music'],'Gastronomía':['#c9722f','#8a3d1e','fork'],'Cultura':['#0f7d7b','#0b5c5b','camera'],'Fiesta':['#c65a8a','#7a2f55','cocktail'],'Deporte':['#2c9e6a','#17603f','beach'],'Arte':['#4a6bd8','#2a3d8f','palette'],'Patrocinado':['#c7a24c','#9c7a2e','star'],
+      'Restaurantes':['#c9722f','#8a3d1e','fork'],'Actividades':['#4a6bd8','#2a3d8f','camera'],'Playas':['#0f9d9a','#0b5c5b','beach'],'Transporte':['#2c9e6a','#17603f','train'],'Bares':['#c65a8a','#7a2f55','cocktail'],'Compras':['#9c7a2e','#6b5320','bag'],'WiFi':['#0f7d7b','#0b5c5b','wifi']};
+    const v=M[cat]||['#0f7d7b','#0b5c5b','calendar'];
+    return {grad:`linear-gradient(140deg,${v[0]},${v[1]})`,icon:v[2],c0:v[0]};
+  }
+  function fill(e,big){const v=vis(e.category);return {bg:v.grad,wm:`<div class="wm${big?'':' wm-s'}">${svg(v.icon)}</div>`,img:coverImg(e.image)};}
+  function coverImg(url){return url?`<img class="cover" src="${url}" loading="lazy" onerror="this.remove()">`:'';}
+
+  /* ---------- Villes + coordonnées ---------- */
+  const CITY={
+    'Cancún':{r:'Quintana Roo',co:[21.161,-86.851]},'Playa del Carmen':{r:'Quintana Roo',co:[20.629,-87.073]},'Tulum':{r:'Quintana Roo',co:[20.211,-87.465]},'Bacalar':{r:'Quintana Roo',co:[18.680,-88.395]},'Cozumel':{r:'Quintana Roo',co:[20.422,-86.922]},'Holbox':{r:'Quintana Roo',co:[21.522,-87.379]},
+    'Mérida':{r:'Yucatán',co:[20.967,-89.624]},'Valladolid':{r:'Yucatán',co:[20.688,-88.202]},'Progreso':{r:'Yucatán',co:[21.282,-89.665]},'Chichén Itzá':{r:'Yucatán',co:[20.684,-88.568]},'Uxmal':{r:'Yucatán',co:[20.360,-89.771]},'Izamal':{r:'Yucatán',co:[20.934,-89.017]}
+  };
+
+  /* ---------- Répertoire (lieux populaires réels) ---------- */
+  const PLACES_URL='places.json'; // ⬅️ URL publique du places.json synchronisé depuis Google Maps
+  let PLACES=[
+    {n:'La Chaya Maya',c:'Restaurantes',city:'Mérida',d:'Cocina yucateca tradicional en casona colonial.',rt:4.7,w:true},
+    {n:'Kuuk',c:'Restaurantes',city:'Mérida',d:'Alta cocina yucateca de autor.',rt:4.6,w:true},
+    {n:'Hartwood',c:'Restaurantes',city:'Tulum',d:'Parrilla a leña frente a la selva.',rt:4.5,w:false},
+    {n:'Arca',c:'Restaurantes',city:'Tulum',d:'Cocina de fuego en ambiente jungla.',rt:4.6,w:false},
+    {n:'Rosa Negra',c:'Restaurantes',city:'Cancún',d:'Cocina latina y ambiente vibrante.',rt:4.4,w:true},
+    {n:"Lorenzillo's",c:'Restaurantes',city:'Cancún',d:'Mariscos y langosta sobre la laguna.',rt:4.5,w:false},
+    {n:'El Fish Fritanga',c:'Restaurantes',city:'Playa del Carmen',d:'Mariscos frescos a buen precio.',rt:4.5,w:true},
+    {n:'Nixtamal',c:'Restaurantes',city:'Playa del Carmen',d:'Cocina mexicana de maíz nixtamalizado.',rt:4.6,w:false},
+    {n:'Kinich',c:'Restaurantes',city:'Izamal',d:'Cocina yucateca en jardín tradicional.',rt:4.6,w:false},
+    {n:'Chichén Itzá',c:'Actividades',city:'Chichén Itzá',d:'Ciudad maya, maravilla del mundo.',rt:4.8,w:false},
+    {n:'Cenote Ik Kil',c:'Actividades',city:'Chichén Itzá',d:'Cenote sagrado ideal para nadar.',rt:4.6,w:false},
+    {n:'Uxmal',c:'Actividades',city:'Uxmal',d:'Zona arqueológica maya estilo Puuc.',rt:4.7,w:false},
+    {n:'Cenote Dos Ojos',c:'Actividades',city:'Tulum',d:'Buceo y snorkel en cavernas cristalinas.',rt:4.7,w:true},
+    {n:'Xcaret',c:'Actividades',city:'Playa del Carmen',d:'Parque eco-arqueológico todo el día.',rt:4.6,w:true},
+    {n:'Sian Ka’an',c:'Actividades',city:'Tulum',d:'Reserva de la biosfera, tours en lancha.',rt:4.7,w:false},
+    {n:'Isla Contoy',c:'Actividades',city:'Cancún',d:'Tour a isla protegida de aves.',rt:4.6,w:false},
+    {n:'Ruinas de Tulum',c:'Actividades',city:'Tulum',d:'Zona arqueológica frente al mar.',rt:4.6,w:false},
+    {n:'Playa Delfines',c:'Playas',city:'Cancún',d:'Vista panorámica y letras de Cancún.',rt:4.5,w:true},
+    {n:'Playa Norte',c:'Playas',city:'Holbox',d:'Arena blanca y aguas someras.',rt:4.8,w:false},
+    {n:'Playa Paraíso',c:'Playas',city:'Tulum',d:'De las mejores playas del Caribe.',rt:4.7,w:false},
+    {n:'Playa Mamitas',c:'Playas',city:'Playa del Carmen',d:'Beach clubs y ambiente animado.',rt:4.4,w:true},
+    {n:'Laguna de Bacalar',c:'Playas',city:'Bacalar',d:'La laguna de los 7 colores.',rt:4.8,w:false},
+    {n:'Malecón de Progreso',c:'Playas',city:'Progreso',d:'Playa y malecón familiar del Golfo.',rt:4.3,w:true},
+    {n:'Playa Maroma',c:'Playas',city:'Playa del Carmen',d:'Arena fina y aguas turquesa.',rt:4.7,w:false},
+    {n:'Terminal ADO Mérida',c:'Transporte',city:'Mérida',d:'Autobuses de larga distancia.',rt:4.2,w:true},
+    {n:'Terminal ADO Cancún',c:'Transporte',city:'Cancún',d:'Autobuses ADO en el centro.',rt:4.2,w:true},
+    {n:'Ferry a Cozumel',c:'Transporte',city:'Playa del Carmen',d:'Ferry Ultramar Playa ↔ Cozumel.',rt:4.4,w:true},
+    {n:'Ferry a Isla Mujeres',c:'Transporte',city:'Cancún',d:'Ferry desde Puerto Juárez.',rt:4.4,w:false},
+    {n:'Aeropuerto de Cancún',c:'Transporte',city:'Cancún',d:'Aeropuerto internacional (CUN).',rt:4.1,w:true},
+    {n:'Estación Tren Maya',c:'Transporte',city:'Mérida',d:'Estación Teya del Tren Maya.',rt:4.3,w:true},
+    {n:'La Negrita Cantina',c:'Bares',city:'Mérida',d:'Cantina histórica con música en vivo.',rt:4.6,w:true},
+    {n:'Coco Bongo',c:'Bares',city:'Cancún',d:'Espectáculo y club nocturno icónico.',rt:4.4,w:false},
+    {n:'La Vaquita',c:'Bares',city:'Playa del Carmen',d:'Club en plena Quinta Avenida.',rt:4.2,w:false},
+    {n:'Gitano',c:'Bares',city:'Tulum',d:'Mezcalería con ambiente selvático.',rt:4.5,w:false},
+    {n:'Batey Mojito Bar',c:'Bares',city:'Tulum',d:'Mojitos de caña con música en vivo.',rt:4.6,w:true},
+    {n:'La Isla Cancún',c:'Compras',city:'Cancún',d:'Centro comercial al aire libre.',rt:4.5,w:true},
+    {n:'Quinta Avenida',c:'Compras',city:'Playa del Carmen',d:'Calle peatonal de tiendas y cafés.',rt:4.5,w:true},
+    {n:'Mercado Lucas de Gálvez',c:'Compras',city:'Mérida',d:'Gran mercado tradicional yucateco.',rt:4.3,w:false},
+    {n:'Paseo de Montejo',c:'Compras',city:'Mérida',d:'Avenida con boutiques y cafés.',rt:4.6,w:true},
+    {n:'Plaza Las Américas',c:'Compras',city:'Mérida',d:'Centro comercial principal.',rt:4.4,w:true},
+    {n:'La Cueva del Chango',c:'Restaurantes',city:'Playa del Carmen',d:'Desayunos y cocina mexicana en jardín.',rt:4.5,w:true},
+    {n:'Alux Restaurant',c:'Restaurantes',city:'Playa del Carmen',d:'Cena de autor dentro de una caverna.',rt:4.4,w:false},
+    {n:'El Fogón',c:'Restaurantes',city:'Playa del Carmen',d:'Tacos al pastor muy populares.',rt:4.5,w:false},
+    {n:'Los Aguachiles',c:'Restaurantes',city:'Playa del Carmen',d:'Mariscos y aguachiles frescos.',rt:4.5,w:true},
+    {n:'Patanegra',c:'Restaurantes',city:'Playa del Carmen',d:'Tapas y cocina española.',rt:4.4,w:true},
+    {n:'El Pirata',c:'Restaurantes',city:'Playa del Carmen',d:'Mariscos caribeños frente a la playa.',rt:4.3,w:false},
+    {n:'Oh La La!',c:'Restaurantes',city:'Playa del Carmen',d:'Cocina de mar mediterránea.',rt:4.5,w:false},
+    {n:'Casa Amate',c:'Restaurantes',city:'Playa del Carmen',d:'Alta cocina mexicana en hotel boutique.',rt:4.6,w:true},
+    {n:'Playa Paraíso (PDC)',c:'Playas',city:'Playa del Carmen',d:'Arena blanca cerca del centro.',rt:4.4,w:false},
+    {n:'Coco Beach',c:'Playas',city:'Playa del Carmen',d:'Ideal para snorkel, aguas tranquilas.',rt:4.5,w:false},
+    {n:'Playa 88',c:'Playas',city:'Playa del Carmen',d:'Playa local relajada.',rt:4.3,w:false},
+    {n:'Playa Xpu-Ha',c:'Playas',city:'Playa del Carmen',d:'Playa virgen de arena fina.',rt:4.7,w:false},
+    {n:'Fusion Beach Bar',c:'Bares',city:'Playa del Carmen',d:'Bar en la playa con fuego y música.',rt:4.4,w:true},
+    {n:'Lido Beach Club',c:'Bares',city:'Playa del Carmen',d:'Beach club de día y noche.',rt:4.3,w:true},
+    {n:'Zenzi Beach Club',c:'Bares',city:'Playa del Carmen',d:'Música en vivo frente al mar.',rt:4.4,w:true},
+    {n:'INTI Beach',c:'Bares',city:'Playa del Carmen',d:'Beach club con ambiente chill.',rt:4.5,w:true},
+    {n:'Río Secreto',c:'Actividades',city:'Playa del Carmen',d:'Río subterráneo con estalactitas.',rt:4.8,w:false},
+    {n:'Cenote Chaak Tun',c:'Actividades',city:'Playa del Carmen',d:'Cenotes con guía cerca del centro.',rt:4.7,w:false},
+    {n:'Parque Los Fundadores',c:'Actividades',city:'Playa del Carmen',d:'Parque frente al mar con portal maya.',rt:4.6,w:true},
+    {n:'Terminal ADO Playa',c:'Transporte',city:'Playa del Carmen',d:'Autobuses ADO en la 5ta Avenida.',rt:4.2,w:true},
+    {n:'Colectivos 2da Norte',c:'Transporte',city:'Playa del Carmen',d:'Vans a Tulum y Cancún.',rt:4.1,w:false},
+    {n:'Paseo del Carmen',c:'Compras',city:'Playa del Carmen',d:'Centro comercial al aire libre.',rt:4.5,w:true},
+    {n:'Calle Corazón',c:'Compras',city:'Playa del Carmen',d:'Boutiques y restaurantes de diseño.',rt:4.4,w:true},
+    {n:'La Habichuela',c:'Restaurantes',city:'Cancún',d:'Cocina yucateca en jardín tropical.',rt:4.6,w:true},
+    {n:'Harry\'s Prime',c:'Restaurantes',city:'Cancún',d:'Steakhouse y mariscos premium.',rt:4.5,w:false},
+    {n:'Puerto Madero',c:'Restaurantes',city:'Cancún',d:'Carnes y mariscos sobre la laguna.',rt:4.5,w:false},
+    {n:'Playa Tortugas',c:'Playas',city:'Cancún',d:'Playa con ferries y club.',rt:4.3,w:true},
+    {n:'Playa Chac Mool',c:'Playas',city:'Cancún',d:'Playa amplia en la zona hotelera.',rt:4.5,w:false},
+    {n:'Playa Langosta',c:'Playas',city:'Cancún',d:'Aguas tranquilas, familiar.',rt:4.4,w:false},
+    {n:'Mandala',c:'Bares',city:'Cancún',d:'Club nocturno en la zona de fiesta.',rt:4.2,w:false},
+    {n:'Museo Maya de Cancún',c:'Actividades',city:'Cancún',d:'Museo y zona arqueológica El Rey.',rt:4.6,w:true},
+    {n:'Kukulcán Plaza',c:'Compras',city:'Cancún',d:'Centro comercial en la zona hotelera.',rt:4.4,w:true},
+    {n:'Mercado 28',c:'Compras',city:'Cancún',d:'Mercado de artesanías.',rt:4.2,w:false},
+    {n:'Gran Cenote',c:'Actividades',city:'Tulum',d:'Cenote con tortugas para snorkel.',rt:4.7,w:false},
+    {n:'Cenote Calavera',c:'Actividades',city:'Tulum',d:'Cenote de salto y buceo.',rt:4.5,w:false},
+    {n:'Kitchen Table',c:'Restaurantes',city:'Tulum',d:'Cocina de fuego en la selva.',rt:4.5,w:false},
+    {n:'Burrito Amor',c:'Restaurantes',city:'Tulum',d:'Burritos orgánicos muy populares.',rt:4.6,w:true},
+    {n:'Del Cielo',c:'Restaurantes',city:'Tulum',d:'Desayunos y café en el centro.',rt:4.5,w:true},
+    {n:'Papaya Playa Project',c:'Bares',city:'Tulum',d:'Fiestas frente al mar.',rt:4.4,w:false},
+    {n:'Playa Pescadores',c:'Playas',city:'Tulum',d:'Playa céntrica con clubs.',rt:4.5,w:false},
+    {n:'Playa Ruinas',c:'Playas',city:'Tulum',d:'Playa bajo las ruinas mayas.',rt:4.6,w:false},
+    {n:'Manjar Blanco',c:'Restaurantes',city:'Mérida',d:'Cocina yucateca casera.',rt:4.6,w:true},
+    {n:'Apoala',c:'Restaurantes',city:'Mérida',d:'Cocina oaxaqueña en Santa Lucía.',rt:4.5,w:true},
+    {n:'Micaela Mar y Leña',c:'Restaurantes',city:'Mérida',d:'Mariscos contemporáneos.',rt:4.6,w:true},
+    {n:'Rosas & Xocolate',c:'Restaurantes',city:'Mérida',d:'Alta cocina en Paseo de Montejo.',rt:4.5,w:true},
+    {n:'Hermana República',c:'Bares',city:'Mérida',d:'Cervecería artesanal.',rt:4.5,w:true},
+    {n:'Mercado 60',c:'Bares',city:'Mérida',d:'Patio gastronómico con música.',rt:4.4,w:true},
+    {n:'Gran Museo del Mundo Maya',c:'Actividades',city:'Mérida',d:'Museo moderno de cultura maya.',rt:4.7,w:true},
+    {n:'Catedral de Mérida',c:'Actividades',city:'Mérida',d:'Catedral colonial en la Plaza Grande.',rt:4.7,w:false},
+    {n:'Gran Plaza Mérida',c:'Compras',city:'Mérida',d:'Centro comercial amplio.',rt:4.4,w:true},
+    {n:'Cenote Suytun',c:'Actividades',city:'Valladolid',d:'Cenote icónico con haz de luz.',rt:4.6,w:false},
+    {n:'Cenote Zací',c:'Actividades',city:'Valladolid',d:'Cenote en pleno centro.',rt:4.5,w:false},
+    {n:'Yerbabuena del Sisal',c:'Restaurantes',city:'Valladolid',d:'Desayunos yucatecos.',rt:4.6,w:true},
+    {n:'Centro de Holbox',c:'Actividades',city:'Holbox',d:'Calles de arena y murales.',rt:4.7,w:false},
+    {n:'Punta Cocos',c:'Playas',city:'Holbox',d:'Atardeceres y aguas calmas.',rt:4.7,w:false},
+    {n:'Los Rápidos Bacalar',c:'Actividades',city:'Bacalar',d:'Corriente natural entre estromatolitos.',rt:4.6,w:false},
+    {n:'Fuerte de San Felipe',c:'Actividades',city:'Bacalar',d:'Fuerte histórico y museo.',rt:4.5,w:false},
+    {n:'Malecón de Cozumel',c:'Compras',city:'Cozumel',d:'Tiendas y artesanías frente al mar.',rt:4.4,w:true},
+    {n:'Parque Chankanaab',c:'Actividades',city:'Cozumel',d:'Parque natural para snorkel.',rt:4.6,w:false},
+    {n:'Convento de Izamal',c:'Actividades',city:'Izamal',d:'Convento franciscano amarillo.',rt:4.7,w:false},
+    {n:'Chez Céline',c:'Restaurantes',city:'Playa del Carmen',d:'Panadería y café francés.',rt:4.6,w:true},
+    {n:'Aldea Corazón',c:'Restaurantes',city:'Playa del Carmen',d:'Cocina mexicana en selva urbana.',rt:4.5,w:true},
+    {n:'Catch',c:'Restaurantes',city:'Playa del Carmen',d:'Mariscos rooftop de moda.',rt:4.4,w:false},
+    {n:'Carboncitos',c:'Restaurantes',city:'Playa del Carmen',d:'Clásico mexicano en la Quinta.',rt:4.4,w:false},
+    {n:'La Perla Pixán',c:'Restaurantes',city:'Playa del Carmen',d:'Cocina y mezcal yucateco-oaxaqueño.',rt:4.6,w:true},
+    {n:'Imprevist',c:'Restaurantes',city:'Playa del Carmen',d:'Cocina de autor contemporánea.',rt:4.5,w:false},
+    {n:'Byblos',c:'Restaurantes',city:'Playa del Carmen',d:'Cocina francesa acogedora.',rt:4.6,w:false},
+    {n:'La Santanera',c:'Bares',city:'Playa del Carmen',d:'Club y coctelería icónica.',rt:4.3,w:false},
+    {n:'Abolengo',c:'Bares',city:'Playa del Carmen',d:'Bar de fiesta en la Quinta.',rt:4.2,w:false},
+    {n:'Xplor',c:'Actividades',city:'Playa del Carmen',d:'Tirolesas, ríos y anfibios.',rt:4.7,w:false},
+    {n:'Cirque du Soleil JOYÀ',c:'Actividades',city:'Playa del Carmen',d:'Espectáculo con cena.',rt:4.7,w:true},
+    {n:'Xenotes',c:'Actividades',city:'Playa del Carmen',d:'Tour de 4 cenotes distintos.',rt:4.7,w:false},
+    {n:'Playa Punta Esmeralda',c:'Playas',city:'Playa del Carmen',d:'Playa con cenote y familias.',rt:4.6,w:false},
+    {n:'Centro Maya',c:'Compras',city:'Playa del Carmen',d:'Centro comercial con cines.',rt:4.4,w:true},
+    {n:'Casa Rolandi',c:'Restaurantes',city:'Cancún',d:'Italiano frente a la laguna.',rt:4.5,w:true},
+    {n:'Porfirio\'s',c:'Restaurantes',city:'Cancún',d:'Alta cocina mexicana.',rt:4.5,w:true},
+    {n:'La Habichuela Sunset',c:'Restaurantes',city:'Cancún',d:'Cena romántica en la laguna.',rt:4.6,w:true},
+    {n:'Navíos',c:'Restaurantes',city:'Cancún',d:'Mariscos con vista al mar.',rt:4.5,w:false},
+    {n:'Benazuza',c:'Restaurantes',city:'Cancún',d:'Cocina molecular de autor.',rt:4.6,w:false},
+    {n:'La Destilería',c:'Restaurantes',city:'Cancún',d:'Cocina mexicana y tequilas.',rt:4.4,w:true},
+    {n:'Playa Ballenas',c:'Playas',city:'Cancún',d:'Playa amplia poco concurrida.',rt:4.5,w:false},
+    {n:'Playa Caracol',c:'Playas',city:'Cancún',d:'Aguas tranquilas, familiar.',rt:4.4,w:false},
+    {n:'Playa Gaviota Azul',c:'Playas',city:'Cancún',d:'Cerca de la vida nocturna.',rt:4.4,w:false},
+    {n:'Ventura Park',c:'Actividades',city:'Cancún',d:'Parque acuático y de aventura.',rt:4.3,w:true},
+    {n:'Aquaworld',c:'Actividades',city:'Cancún',d:'Deportes acuáticos y tours.',rt:4.4,w:false},
+    {n:'Zona Arqueológica El Meco',c:'Actividades',city:'Cancún',d:'Ruinas mayas poco visitadas.',rt:4.4,w:false},
+    {n:'Dady\'O',c:'Bares',city:'Cancún',d:'Discoteca clásica de la zona.',rt:4.1,w:false},
+    {n:'Congo Bar',c:'Bares',city:'Cancún',d:'Bar animado en la zona hotelera.',rt:4.2,w:false},
+    {n:'Plaza Puerto Cancún',c:'Compras',city:'Cancún',d:'Marina, tiendas y restaurantes.',rt:4.5,w:true},
+    {n:'Las Plazas Outlet',c:'Compras',city:'Cancún',d:'Outlet de marcas.',rt:4.2,w:true},
+    {n:'Casa Jaguar',c:'Restaurantes',city:'Tulum',d:'Cena en la jungla con música.',rt:4.4,w:false},
+    {n:'Ziggy\'s',c:'Restaurantes',city:'Tulum',d:'Restaurante de playa.',rt:4.5,w:true},
+    {n:'Taquería Honorio',c:'Restaurantes',city:'Tulum',d:'Cochinita y lechón legendarios.',rt:4.7,w:false},
+    {n:'Antojitos La Chiapaneca',c:'Restaurantes',city:'Tulum',d:'Tacos al pastor económicos.',rt:4.6,w:false},
+    {n:'Raw Love',c:'Restaurantes',city:'Tulum',d:'Café saludable y bowls.',rt:4.6,w:true},
+    {n:'Matcha Mama',c:'Restaurantes',city:'Tulum',d:'Smoothies y bowls fotogénicos.',rt:4.5,w:false},
+    {n:'Cobá',c:'Actividades',city:'Tulum',d:'Ruinas mayas en la selva.',rt:4.7,w:false},
+    {n:'Laguna Kaan Luum',c:'Actividades',city:'Tulum',d:'Laguna turquesa con cenote.',rt:4.6,w:false},
+    {n:'Casa Cenote',c:'Actividades',city:'Tulum',d:'Cenote abierto para snorkel.',rt:4.6,w:false},
+    {n:'Muyil',c:'Actividades',city:'Tulum',d:'Ruinas y canales en Sian Ka’an.',rt:4.6,w:false},
+    {n:'Playa Las Palmas',c:'Playas',city:'Tulum',d:'Playa pública gratuita.',rt:4.5,w:false},
+    {n:'Playa Xcacel',c:'Playas',city:'Tulum',d:'Playa natural protegida.',rt:4.7,w:false},
+    {n:'La Zebra',c:'Bares',city:'Tulum',d:'Coctelería y salsa frente al mar.',rt:4.5,w:false},
+    {n:'Curandero',c:'Bares',city:'Tulum',d:'Mezcalería moderna.',rt:4.5,w:false},
+    {n:'Holistika Market',c:'Compras',city:'Tulum',d:'Mercado de diseño y bienestar.',rt:4.5,w:false},
+    {n:'Néctar',c:'Restaurantes',city:'Mérida',d:'Alta cocina yucateca de autor.',rt:4.6,w:true},
+    {n:'Catrín',c:'Restaurantes',city:'Mérida',d:'Cocina mexicana en Montejo.',rt:4.5,w:true},
+    {n:'La Recova',c:'Restaurantes',city:'Mérida',d:'Parrilla argentina.',rt:4.5,w:true},
+    {n:'Trotter\'s',c:'Restaurantes',city:'Mérida',d:'Steakhouse y vinos.',rt:4.5,w:false},
+    {n:'Marago Pastas',c:'Restaurantes',city:'Mérida',d:'Cocina italiana casera.',rt:4.6,w:true},
+    {n:'Lo Que Hay',c:'Restaurantes',city:'Mérida',d:'Fusión creativa de temporada.',rt:4.6,w:false},
+    {n:'Palacio Cantón',c:'Actividades',city:'Mérida',d:'Museo de antropología en Montejo.',rt:4.6,w:false},
+    {n:'Casa Montejo',c:'Actividades',city:'Mérida',d:'Casona histórica y museo.',rt:4.6,w:false},
+    {n:'Parque de Santa Lucía',c:'Actividades',city:'Mérida',d:'Plaza con serenatas y trova.',rt:4.6,w:true},
+    {n:'Cenotes de Cuzamá',c:'Actividades',city:'Mérida',d:'Tres cenotes en truck maya.',rt:4.5,w:false},
+    {n:'La Fundación Mezcalería',c:'Bares',city:'Mérida',d:'Mezcales y ambiente joven.',rt:4.5,w:false},
+    {n:'Dzalbay Cantina',c:'Bares',city:'Mérida',d:'Cantina moderna con coctelería.',rt:4.5,w:true},
+    {n:'City Center Mérida',c:'Compras',city:'Mérida',d:'Centro comercial con cines.',rt:4.4,w:true},
+    {n:'Altabrisa',c:'Compras',city:'Mérida',d:'Plaza comercial al norte.',rt:4.5,w:true},
+    {n:'Conato 1910',c:'Restaurantes',city:'Valladolid',d:'Cocina yucateca en casona.',rt:4.5,w:true},
+    {n:'Taberna de los Frailes',c:'Restaurantes',city:'Valladolid',d:'Cocina regional junto al convento.',rt:4.5,w:true},
+    {n:'Casa de los Venados',c:'Actividades',city:'Valladolid',d:'Colección de arte popular.',rt:4.8,w:false},
+    {n:'Convento de San Bernardino',c:'Actividades',city:'Valladolid',d:'Convento y videomapping.',rt:4.6,w:false},
+    {n:'Luuma',c:'Restaurantes',city:'Holbox',d:'Cocina de autor isleña.',rt:4.7,w:true},
+    {n:'Roots Pizza',c:'Restaurantes',city:'Holbox',d:'Pizzas artesanales populares.',rt:4.6,w:false},
+    {n:'Painapol',c:'Restaurantes',city:'Holbox',d:'Fruta, smoothies y desayunos.',rt:4.6,w:false},
+    {n:'Tour Ojo de Agua',c:'Actividades',city:'Holbox',d:'Tour de los 3 islotes.',rt:4.7,w:false},
+    {n:'Kinta',c:'Restaurantes',city:'Cozumel',d:'Cocina mexicana contemporánea.',rt:4.7,w:true},
+    {n:'Kondesa',c:'Restaurantes',city:'Cozumel',d:'Cena en jardín tropical.',rt:4.6,w:true},
+    {n:'Parque Punta Sur',c:'Actividades',city:'Cozumel',d:'Faro, arrecife y lagunas.',rt:4.6,w:false},
+    {n:'Playa Palancar',c:'Playas',city:'Cozumel',d:'Arrecife famoso para snorkel.',rt:4.7,w:false},
+    {n:'Nixtamal Bacalar',c:'Restaurantes',city:'Bacalar',d:'Cocina mexicana frente a la laguna.',rt:4.6,w:true},
+    {n:'Mango y Chile',c:'Restaurantes',city:'Bacalar',d:'Opciones veganas y vista.',rt:4.6,w:true},
+    {n:'Cenote Azul Bacalar',c:'Actividades',city:'Bacalar',d:'Cenote profundo junto a la laguna.',rt:4.6,w:false},
+    {n:'Almadía',c:'Restaurantes',city:'Progreso',d:'Mariscos frente al malecón.',rt:4.5,w:true},
+    {n:'Cenote Yokdzonot',c:'Actividades',city:'Chichén Itzá',d:'Cenote comunitario para nadar.',rt:4.7,w:false},
+    {n:'Kabah',c:'Actividades',city:'Uxmal',d:'Zona arqueológica cercana.',rt:4.6,w:false},
+    {n:'Choco-Story Uxmal',c:'Actividades',city:'Uxmal',d:'Museo del cacao maya.',rt:4.5,w:true},
+    {n:'Kinich Kakmó',c:'Actividades',city:'Izamal',d:'Gran pirámide maya en la ciudad.',rt:4.6,w:false}
+  ];
+  const FAV=new Set();
+
+  /* ---------- Géolocalisation ---------- */
+  const LOC={es:'Cerca de ti',en:'Near you',fr:'Autour de moi',it:'Vicino a te',de:'In deiner Nähe'};
+  let USERLOC=null, NEARCITY=null;
+  function placeCoord(i){const p=PLACES[i];if(p.lat&&p.lng)return [p.lat,p.lng];const co=(CITY[p.city]||{co:[20.6,-88]}).co;const j1=((i%5)-2)*0.02,j2=(((i*3)%5)-2)*0.022;return [co[0]+j1,co[1]+j2];}
+  function distKm(a1,a2,b1,b2){const R=6371,dLat=(b1-a1)*Math.PI/180,dLng=(b2-a2)*Math.PI/180,s=Math.sin(dLat/2)**2+Math.cos(a1*Math.PI/180)*Math.cos(b1*Math.PI/180)*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(s));}
+  function pd(i){const c=placeCoord(i);return distKm(USERLOC.lat,USERLOC.lng,c[0],c[1]);}
+  function nearestCity(lat,lng){let best=null;Object.keys(CITY).forEach(c=>{const km=distKm(lat,lng,CITY[c].co[0],CITY[c].co[1]);if(!best||km<best.km)best={city:c,region:CITY[c].r,km};});return best;}
+  function defaultFilter(){return NEARCITY?{region:NEARCITY.region,city:NEARCITY.city}:{region:'all',city:'all'};}
+  function locate(){
+    if(!navigator.geolocation){applyGeo(null);return;}
+    navigator.geolocation.getCurrentPosition(
+      pos=>applyGeo({lat:pos.coords.latitude,lng:pos.coords.longitude}),
+      ()=>applyGeo(null),{timeout:8000,maximumAge:300000});
+  }
+  function applyGeo(loc){
+    USERLOC=loc;
+    if(loc){const nc=nearestCity(loc.lat,loc.lng);NEARCITY=(nc.km<=70)?nc:null;
+      if(NEARCITY){FILTER.region=nc.region;FILTER.city=nc.city;} else {FILTER={region:'all',city:'all'};}  // trop loin / hors répertoire → tout
+    } else {NEARCITY=null;FILTER={region:'all',city:'all'};}
+    renderActive();
+  }
+
+  /* ---------- Événements (chargés auto) ---------- */
+  const MONTHS=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const EVENTS_URL='events.json';
+  const DEFAULT_EVENTS=[
+    {title:'Festival de Jazz en la playa',date_start:'2026-08-08',location:'Playa del Carmen · Playa Mamitas',category:'Música',description:'Tres días de conciertos gratuitos frente al mar.',image:'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=700&q=75',source_url:'https://siturq.gob.mx/eventos',source_name:'SITUR Quintana Roo'},
+    {title:'Feria gastronómica maya',date_start:'2026-08-09',location:'Mérida · Plaza Grande',category:'Gastronomía',description:'Cocineras tradicionales, artesanía y música en vivo.',image:'',source_url:'https://www.merida.gob.mx/eventos',source_name:'Ayuntamiento de Mérida'},
+    {title:'Noche de trova yucateca',date_start:'2026-08-10',location:'Mérida · Santa Lucía',category:'Cultura',description:'Velada de trova tradicional al aire libre.',image:'',source_url:'https://www.yucatan.gob.mx/',source_name:'Gobierno de Yucatán'},
+    {title:'Mercado nocturno & DJ set',date_start:'2026-08-12',location:'Tulum · Aldea Zamá',category:'Fiesta',description:'Mercado de diseño local y DJ al caer la noche.',image:'',source_url:'https://quintanaroohoy.com/cultura/',source_name:'Quintana Roo Hoy'},
+    {title:'Regata & feria náutica',date_start:'2026-08-15',location:'Bacalar · Laguna de 7 colores',category:'Deporte',description:'Regata y actividades náuticas para la familia.',image:'',source_url:'https://siturq.gob.mx/eventos',source_name:'SITUR Quintana Roo'},
+    {title:'Exposición de arte contemporáneo',date_start:'2026-08-18',location:'Mérida · Centro Histórico',category:'Arte',description:'Muestra colectiva de artistas de la península.',image:'',source_url:'https://www.merida.gob.mx/eventos',source_name:'Ayuntamiento de Mérida'}
+  ];
+  const REST={title:'Casa Malca — Noche de mezcal',date_start:'',location:'Tulum',category:'Patrocinado',description:'Nuevo menú de temporada y cata de mezcal. Reserva anticipada para suscriptores.',image:'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=700&q=75',source_url:'#',source_name:'Casa Malca',sponsor:true};
+  let EVENTS=DEFAULT_EVENTS;
+  function dParts(iso){const p=(iso||'').split('-');return {d:p[2]||'—',m:MONTHS[(+p[1]||1)-1]||''};}
+
+  /* ---------- Grille d'accueil ---------- */
+  const TILES=[['fork','Restaurantes'],['camera','Actividades'],['beach','Playas'],['train','Transporte'],['cocktail','Bares'],['bag','Compras'],['wifi','WiFi'],['ticket','eventos'],['star','novedades'],['heart','fav'],['map','mapa'],['crown','planes']];
+  function tileLabel(k){if(PC.indexOf(k)>=0)return tcat(k);const m={mapa:'map_title',fav:'fav_short',planes:'tab_plans',eventos:'eventos',novedades:'novedades'};return t(m[k]||k);}
+  function buildGrid(){document.getElementById('grid').innerHTML=TILES.map(x=>`<div class="tile" onclick="tileAction('${x[1]}')"><div class="ic">${svg(x[0])}</div><span>${tileLabel(x[1])}</span></div>`).join('');}
+  const FORYOU={es:'Sugerencias para ti',en:'Picks for you',fr:'Suggestions pour toi',it:'Consigli per te',de:'Für dich'};
+  function buildCarousel(){
+    const el=document.getElementById('carousel');if(!el)return;
+    document.getElementById('carCap').textContent=FORYOU[LANG];
+    const cats=['Restaurantes','Actividades','Playas','Bares','Transporte','Compras'];
+    const picks=[];
+    cats.forEach(c=>{const ix=[];PLACES.forEach((p,i)=>{if(p.c===c)ix.push(i);});if(ix.length)picks.push(ix[Math.floor(Math.random()*ix.length)]);});
+    const card=i=>{const p=PLACES[i],v=vis(p.c);return `<div class="ccard" onclick="openPlace(${i})"><div class="cimg" style="background:${v.grad}"><div class="wm wm-s">${svg(v.icon)}</div>${coverImg(p.img)}</div><div class="cb"><div class="ct">${tcat(p.c)}</div><h4>${p.n}</h4></div></div>`;};
+    const h=picks.map(card).join('');
+    el.innerHTML=`<div class="ctrack">${h}${h}</div>`;
+  }
+  function tileAction(k){
+    if(PC.indexOf(k)>=0){goList(k);}
+    else if(k==='eventos')showView('agenda');
+    else if(k==='novedades')showView('news');
+    else if(k==='fav')goFav();
+    else if(k==='mapa')showView('map');
+    else if(k==='planes')showView('plans');
+  }
+
+  function renderAgenda(){document.getElementById('agendaList').innerHTML=EVENTS.map((e,i)=>{const dp=dParts(e.date_start),f=fill(e,false);return `<div class="evt" onclick="openIdx(${i})"><div class="date"><div class="d">${dp.d}</div><div class="m">${dp.m}</div></div><div class="info"><h3>${e.title}</h3><div class="loc">${e.location}</div><div class="row"><span class="pill">${tev(e.category)}</span></div></div><div class="ethumb" style="background:${f.bg}">${f.wm}${f.img}</div></div>`;}).join('');}
+  function renderNews(){document.getElementById('newsList').innerHTML=EVENTS.slice(0,4).map((e,i)=>{const f=fill(e,true);return `<div class="news" onclick="openIdx(${i})"><div class="img" style="background:${f.bg}">${f.wm}${f.img}<span class="tag">${tev(e.category)}</span></div><div class="body"><div class="src">${t('src_auto')} · ${e.source_name}</div><h3>${e.title}</h3></div></div>`;}).join('');}
+
+  /* ---------- Filtres région / ville ---------- */
+  let FILTER={region:'all',city:'all'};
+  let ACTIVE='', LIST_CAT='Restaurantes', LIST_WIFI=false;
+  function regionOf(p){return (CITY[p.city]&&CITY[p.city].r)||p.region||'';}
+  function citiesFor(r){return [...new Set(PLACES.filter(p=>r==='all'||regionOf(p)===r).map(p=>p.city))].sort();}
+  function pMatch(p){return (FILTER.region==='all'||regionOf(p)===FILTER.region)&&(FILTER.city==='all'||p.city===FILTER.city);}
+  function renderFilters(hostId){
+    const regs=[['all',t('all_regions')],['Quintana Roo','Quintana Roo'],['Yucatán','Yucatán']];
+    const locLbl=NEARCITY?('📍 '+NEARCITY.city):('📍 '+LOC[LANG]);
+    let h='<div class="frow"><div class="fchip'+(USERLOC?' on':'')+'" onclick="locate()">'+locLbl+'</div>'+regs.map(r=>`<div class="fchip ${FILTER.region===r[0]?'on':''}" onclick="setRegion('${r[0]}')">${r[1]}</div>`).join('')+'</div>';
+    const cs=citiesFor(FILTER.region);
+    h+='<div class="frow"><div class="fchip '+(FILTER.city==='all'?'on':'')+'" onclick="setCity(\'all\')">'+t('all_cities')+'</div>'+cs.map(c=>`<div class="fchip ${FILTER.city===c?'on':''}" onclick="setCity('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('')+'</div>';
+    document.getElementById(hostId).innerHTML=h;
+  }
+  function setRegion(r){FILTER.region=r;FILTER.city='all';renderActive();}
+  function setCity(c){FILTER.city=c;renderActive();}
+  function renderActive(){if(ACTIVE==='list')renderList();else if(ACTIVE==='fav')renderFav();else if(ACTIVE==='map')renderMap();}
+
+  /* ---------- Cartes de lieu ---------- */
+  function placeCard(p,i){const v=vis(p.c);const on=FAV.has(i)?'on':'';const km=USERLOC?`<span class="rate" style="color:var(--teal)">${pd(i).toFixed(1)} km</span>`:'';return `<div class="place" onclick="openPlace(${i})"><div class="pthumb" style="background:${v.grad}"><div class="wm wm-s">${svg(v.icon)}</div>${coverImg(p.img)}</div><div class="pi"><h3>${p.n}</h3><div class="sub">${tcat(p.c)} · ${p.city}</div><div class="rl">${p.rt?`<span class="rate">★ ${p.rt}</span>`:''}${p.w?`<span class="wifiTag">✓ WiFi</span>`:''}${km}</div></div><div class="heart ${on}" onclick="event.stopPropagation();toggleFav(${i})">${svg('heart')}</div></div>`;}
+
+  function goList(cat){LIST_CAT=cat;LIST_WIFI=(cat==='WiFi');ACTIVE='list';FILTER=defaultFilter();showView('list');renderList();}
+  function renderList(){
+    document.getElementById('listTitle').textContent=tcat(LIST_CAT);
+    renderFilters('listFilter');
+    let items=PLACES.map((p,i)=>[p,i]).filter(([p])=>(LIST_WIFI?p.w:p.c===LIST_CAT)&&pMatch(p));
+    if(USERLOC)items.sort((a,b)=>pd(a[1])-pd(b[1]));
+    document.getElementById('listItems').innerHTML=items.length?items.map(([p,i])=>placeCard(p,i)).join(''):`<div class="empty">—</div>`;
+  }
+
+  function goFav(){ACTIVE='fav';FILTER=defaultFilter();showView('fav');renderFav();}
+  function renderFav(){
+    renderFilters('favFilter');
+    let items=PLACES.map((p,i)=>[p,i]).filter(([p,i])=>FAV.has(i)&&pMatch(p));
+    if(USERLOC)items.sort((a,b)=>pd(a[1])-pd(b[1]));
+    document.getElementById('favItems').innerHTML=items.length?items.map(([p,i])=>placeCard(p,i)).join(''):`<div class="empty"><div class="big">♡</div>${t('fav_empty').replace(/\\n/g,'<br>')}</div>`;
+  }
+
+  function toggleFav(i){FAV.has(i)?FAV.delete(i):FAV.add(i);document.getElementById('favCnt').textContent=FAV.size;renderActive();}
+
+  /* ---------- Carte ---------- */
+  const LNGMIN=-90.15,LNGMAX=-86.3,LATMIN=17.8,LATMAX=22.0;
+  function proj(lat,lng){return {x:(lng-LNGMIN)/(LNGMAX-LNGMIN)*100,y:(LATMAX-lat)/(LATMAX-LATMIN)*100};}
+  const MAPSVG='<svg viewBox="0 0 340 300" preserveAspectRatio="none"><rect width="340" height="300" fill="#0f7d7b"/><path d="M10,14 C4,6 16,4 34,6 L286,10 C308,12 306,40 300,70 C294,104 262,120 262,150 C262,196 256,236 232,272 C218,296 186,296 156,294 L26,296 C10,294 6,278 6,246 Z" fill="#f2e8d6" stroke="#e0d0b2" stroke-width="1.5"/><text x="60" y="150" fill="#b9a884" font-size="11" font-family="Georgia" font-style="italic">Yucatán</text><text x="150" y="235" fill="#b9a884" font-size="11" font-family="Georgia" font-style="italic">Quintana&#160;Roo</text></svg>';
+  function renderMap(){
+    renderFilters('mapFilter');
+    const w=document.getElementById('mapwrap');
+    let dots='';let n=0;
+    PLACES.forEach((p,i)=>{
+      if(!pMatch(p))return;n++;
+      const co=CITY[p.city].co;const j1=((i%5)-2)*0.02,j2=(((i*3)%5)-2)*0.022;
+      const pr=proj(co[0]+j1,co[1]+j2);
+      dots+=`<div class="dot" title="${p.n}" style="left:${pr.x}%;top:${pr.y}%;background:${vis(p.c).c0}" onclick="openPlace(${i})"></div>`;
+    });
+    w.innerHTML=MAPSVG+dots;
+    document.getElementById('mapCount').textContent=n+' '+t('results');
+    document.getElementById('mapLegend').innerHTML=PC.map((c,i)=>`<span><i style="background:${vis(c).c0}"></i>${t('cats')[i]}</span>`).join('');
+  }
+
+  /* ---------- Fiches (modal) ---------- */
+  function openObj(e){
+    const dp=dParts(e.date_start);const src=(e.sponsor?t('src_spon'):t('src_auto'))+' · '+e.source_name;
+    const link=(e.source_url&&e.source_url!=='#')?`<a href="${e.source_url}" target="_blank" rel="noopener">${t('btn_src')}</a>`:`<a>${t('btn_src')}</a>`;
+    const f=fill(e,true);
+    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${f.bg}">${f.wm}${f.img}<span class="hchip">${tev(e.category)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${e.title}</h2><div class="m2"><span>${dp.d} ${dp.m}</span><span>${e.location}</span></div><div class="srcbar"><span class="d"></span> ${src}</div><p class="desc">${e.description}</p><div class="social">${link}<a>${t('btn_ig')}</a><a>${t('btn_share')}</a></div><button class="btn" style="margin-top:16px" onclick="closeModal()">${t('btn_add')}</button></div>`;
+    document.getElementById('modal').classList.add('show');
+  }
+  function openIdx(i){openObj(EVENTS[i]);}
+  function openEvent(){openObj(REST);}
+  function openPlace(i){
+    const p=PLACES[i];const v=vis(p.c);const on=FAV.has(i);
+    const km=USERLOC?`<span>${pd(i).toFixed(1)} km</span>`:'';
+    const addr=p.address?`<br><span style="color:var(--muted)">📍 ${p.address}</span>`:'';
+    const gq=(p.lat&&p.lng)?`${p.lat},${p.lng}`:encodeURIComponent(p.n+' '+(p.address||p.city||''));
+    const gmaps=`<a href="https://www.google.com/maps/search/?api=1&query=${gq}" target="_blank" rel="noopener">🗺️ Google Maps</a>`;
+    const web=p.website?`<a href="${p.website}" target="_blank" rel="noopener">🌐 Web</a>`:'';
+    const tel=p.phone?`<a href="tel:${p.phone}">📞 Tel</a>`:'';
+    const fb=p.facebook?`<a href="${p.facebook}" target="_blank" rel="noopener">📘 Facebook</a>`:'';
+    const ig=p.instagram?`<a href="${p.instagram}" target="_blank" rel="noopener">📷 Instagram</a>`:'';
+    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${v.grad}"><div class="wm">${svg(v.icon)}</div>${coverImg(p.img)}<span class="hchip">${tcat(p.c)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${p.n}</h2><div class="m2"><span>📍 ${p.city}</span>${p.rt?`<span>★ ${p.rt}</span>`:''}${p.w?`<span>✓ WiFi</span>`:''}${km}</div><p class="desc">${p.d}${addr}</p><div class="social"><a onclick="toggleFav(${i});renderPlaceModal(${i})">${on?t('fav_remove'):t('fav_add')}</a>${gmaps}${web}${tel}${fb}${ig}</div></div>`;
+    document.getElementById('modal').classList.add('show');
+  }
+  function renderPlaceModal(i){openPlace(i);}
+  function closeModal(){document.getElementById('modal').classList.remove('show');}
+  document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+
+  /* ---------- Navigation ---------- */
+  const views={home:'v-home',agenda:'v-agenda',news:'v-news',list:'v-list',fav:'v-fav',map:'v-map',plans:'v-plans'};
+  function showView(v){
+    Object.values(views).forEach(id=>document.getElementById(id).classList.remove('active'));
+    document.getElementById(views[v]).classList.add('active');
+    document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v===v));
+    document.getElementById('fab').style.display=(v==='fav')?'none':'flex';
+    if(v==='fav'){ACTIVE='fav';renderFav();}
+    else if(v==='map'){ACTIVE='map';renderMap();}
+    else if(v!=='list'){ACTIVE='';}
+    document.getElementById('views').scrollTop=0;
+  }
+
+  async function loadEvents(){
+    let stamp='· demo';
+    try{const r=await fetch(EVENTS_URL,{cache:'no-store'});if(r.ok){const data=await r.json();if(data.events&&data.events.length){EVENTS=data.events;if(data.updated_at)stamp='· '+data.updated_at.slice(0,10);}}}catch(e){}
+    document.getElementById('agendaStamp').textContent=stamp;
+    applyLang();
+    locate();   // géolocalisation par défaut (repli sur « tout » si refusée ou trop loin)
+  }
+  async function loadPlaces(){
+    try{const r=await fetch(PLACES_URL,{cache:'no-store'});if(r.ok){const data=await r.json();const arr=data.places||data;if(Array.isArray(arr)&&arr.length){PLACES=arr;FAV.clear();document.getElementById('favCnt').textContent=0;buildCarousel();renderActive();}}}catch(e){/* garde le répertoire de démonstration */}
+  }
+  loadEvents();
+  loadPlaces();
+</script>
+</body>
+</html>

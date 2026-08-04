@@ -1,0 +1,5 @@
+.DS_Store
+app-mexico-repo/
+images/
+__pycache__/
+*.pyc

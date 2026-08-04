@@ -1,11 +1,6 @@
 {
-  "updated_at": "2026-08-04T14:00:00Z",
-  "count": 3,
-  "removed": 0,
-  "note": "Exemple de sortie de places_sync.py (schéma lu par l'app). 'img' pointe vers TES photos hébergées.",
-  "places": [
-    {"n": "La Chaya Maya", "c": "Restaurantes", "city": "Mérida", "region": "Yucatán", "d": "Cocina yucateca tradicional en casona colonial.", "rt": 4.7, "reviews": 18452, "lat": 20.9709, "lng": -89.6248, "img": "https://TON-DOMAINE/images/ChIJ_la_chaya_maya.jpg", "place_id": "ChIJ_la_chaya_maya", "website": "https://www.lachayamaya.com", "status": "OPERATIONAL", "w": true},
-    {"n": "Cenote Dos Ojos", "c": "Actividades", "city": "Tulum", "region": "Quintana Roo", "d": "Buceo y snorkel en cavernas cristalinas.", "rt": 4.7, "reviews": 9231, "lat": 20.3247, "lng": -87.3903, "img": "https://TON-DOMAINE/images/ChIJ_dos_ojos.jpg", "place_id": "ChIJ_dos_ojos", "website": "", "status": "OPERATIONAL", "w": true},
-    {"n": "Laguna de Bacalar", "c": "Playas", "city": "Bacalar", "region": "Quintana Roo", "d": "La laguna de los 7 colores.", "rt": 4.8, "reviews": 12040, "lat": 18.6813, "lng": -88.3956, "img": "https://TON-DOMAINE/images/ChIJ_bacalar.jpg", "place_id": "ChIJ_bacalar", "website": "", "status": "OPERATIONAL", "w": false}
-  ]
+  "updated_at": "2026-08-04T17:59:52Z",
+  "count": 0,
+  "source": "OpenStreetMap",
+  "places": []
 }

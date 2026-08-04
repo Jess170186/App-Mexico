@@ -59,6 +59,33 @@
   .lodge.own .go{color:var(--gold-l)}
   .lodge.own .lg-ic{background:rgba(255,255,255,.15);color:var(--gold-l)}
   .lodge .badge{display:inline-block;background:var(--gold);color:#3a2e0e;font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:3px 9px;border-radius:20px;text-transform:uppercase}
+  #authGate{position:absolute;inset:0;z-index:200;background:var(--ivory);display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .ag-top{background:linear-gradient(135deg,var(--teal),var(--teal2));padding:40px 22px 24px;text-align:center;color:#fff;flex:none}
+  .ag-logo{font-family:"Snell Roundhand","Segoe Script","Brush Script MT",cursive;font-size:36px;color:#fff;line-height:1}
+  .ag-sub{font-size:11px;color:var(--gold-l);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+  .ag-flags{display:inline-flex;gap:3px;margin-top:12px;background:rgba(255,255,255,.14);padding:4px 10px;border-radius:20px;font-size:15px}
+  .ag-flags .flag{cursor:pointer;opacity:.55}
+  .ag-flags .flag.on{opacity:1}
+  .auth-pane{padding:22px}
+  .auth-pane h2{font-family:Georgia,serif;font-size:20px;color:var(--teal2);margin-bottom:14px}
+  .auth-in{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:14px;margin-bottom:10px;background:#fff;color:var(--ink);outline:none;font-family:inherit}
+  .auth-in:focus{border-color:var(--teal)}
+  .auth-btn{width:100%;padding:13px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px}
+  .auth-btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#3a2e0e}
+  .auth-btn:active{opacity:.9}
+  .auth-msg{font-size:12px;margin-top:10px;min-height:15px;color:#c0392b}
+  .auth-alt{font-size:12.5px;color:var(--muted);margin-top:18px;text-align:center;line-height:2}
+  .auth-alt a,.auth-back{color:var(--teal2);font-weight:700;cursor:pointer}
+  .auth-alt a{text-decoration:underline}
+  .auth-back{display:inline-block;margin-bottom:10px;font-size:12px}
+  .auth-feat{font-size:12.5px;color:#33413f;margin:5px 0}
+  .auth-price{font-family:Georgia,serif;font-size:32px;color:var(--teal2);text-align:center;margin:6px 0}
+  .auth-price small{font-size:14px;color:var(--muted)}
+  .auth-note{font-size:11px;color:var(--muted);margin-top:12px;text-align:center;line-height:1.5}
+  .auth-row{display:flex;gap:8px}
+  .auth-row .auth-in{width:50%}
+  select.auth-in{-webkit-appearance:none;appearance:none;background:#fff}
+  .cimg .cbadge{position:absolute;top:6px;left:6px;background:var(--gold);color:#3a2e0e;font-size:9px;font-weight:800;padding:2px 6px;border-radius:10px;z-index:2}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .tile{background:var(--ivory);border:1px solid var(--line);border-radius:16px;padding:12px 6px 9px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:.15s;box-shadow:0 3px 8px rgba(20,42,43,.05)}
   .tile:active{transform:scale(.95)}
@@ -175,9 +202,72 @@
 <body>
   <div class="stage">
     <div class="phone"><div class="screen">
+      <div id="authGate">
+        <div class="ag-top">
+          <div class="ag-logo">App&nbsp;Mexico</div>
+          <div class="ag-sub" data-at="tag">Quintana Roo · Yucatán</div>
+          <div class="ag-flags">
+            <span class="flag on" data-l="es" onclick="setLang('es')">🇪🇸</span>
+            <span class="flag" data-l="en" onclick="setLang('en')">🇺🇸</span>
+            <span class="flag" data-l="fr" onclick="setLang('fr')">🇫🇷</span>
+            <span class="flag" data-l="it" onclick="setLang('it')">🇮🇹</span>
+            <span class="flag" data-l="de" onclick="setLang('de')">🇩🇪</span>
+          </div>
+        </div>
+        <div class="auth-pane" id="pane-login">
+          <h2 data-at="login">Connexion</h2>
+          <input class="auth-in" id="li-email" type="email" autocomplete="email" data-atph="email" placeholder="Email">
+          <input class="auth-in" id="li-pass" type="password" autocomplete="current-password" data-atph="pass" placeholder="Mot de passe">
+          <button class="auth-btn" onclick="doLogin()" data-at="signin">Se connecter</button>
+          <div class="auth-msg" id="li-msg"></div>
+          <div class="auth-alt"><span data-at="newHere">Nouveau ?</span><br>
+            <a onclick="showPane('sub')" data-at="subCta">S'abonner 3$/mois</a> ·
+            <a onclick="showPane('adv')" data-at="advCta">Devenir annonceur</a>
+          </div>
+        </div>
+        <div class="auth-pane" id="pane-sub" style="display:none">
+          <span class="auth-back" onclick="showPane('login')">← <span data-i18n="back">Retour</span></span>
+          <h2 data-at="subTitle">Abonnement</h2>
+          <div class="auth-price">3$<small>/<span data-i18n="month">mois</span></small></div>
+          <div class="auth-feat">✦ <span data-i18n="f1"></span></div>
+          <div class="auth-feat">✦ <span data-i18n="f2"></span></div>
+          <div class="auth-feat">✦ <span data-i18n="f3"></span></div>
+          <input class="auth-in" id="su-email" type="email" data-atph="email" placeholder="Email" style="margin-top:14px">
+          <input class="auth-in" id="su-pass" type="password" data-atph="passNew" placeholder="Mot de passe">
+          <button class="auth-btn gold" onclick="doSubscribe()" data-at="start">Commencer</button>
+          <div class="auth-msg" id="su-msg"></div>
+          <div class="auth-note" data-at="paySoon"></div>
+        </div>
+        <div class="auth-pane" id="pane-adv" style="display:none">
+          <span class="auth-back" onclick="showPane('login')">← <span data-i18n="back">Retour</span></span>
+          <h2 data-at="advTitle">Devenir annonceur — 1 an gratuit</h2>
+          <div class="auth-row">
+            <input class="auth-in" id="ad-email" type="email" data-atph="email" placeholder="Email">
+            <input class="auth-in" id="ad-pass" type="password" data-atph="passNew" placeholder="Mot de passe">
+          </div>
+          <input class="auth-in" id="ad-name" data-atph="bizName" placeholder="Nom de l'entreprise">
+          <select class="auth-in" id="ad-cat"></select>
+          <select class="auth-in" id="ad-city"></select>
+          <textarea class="auth-in" id="ad-desc" rows="2" data-atph="bizDesc" placeholder="Description"></textarea>
+          <input class="auth-in" id="ad-addr" data-atph="bizAddr" placeholder="Adresse">
+          <div class="auth-row">
+            <input class="auth-in" id="ad-tel" data-atph="bizTel" placeholder="Téléphone">
+            <input class="auth-in" id="ad-web" data-atph="bizWeb" placeholder="Site web">
+          </div>
+          <div class="auth-row">
+            <input class="auth-in" id="ad-fb" placeholder="Facebook">
+            <input class="auth-in" id="ad-ig" placeholder="Instagram">
+          </div>
+          <input class="auth-in" id="ad-img" data-atph="bizImg" placeholder="Photo (URL)">
+          <button class="auth-btn gold" onclick="doAdvertiser()" data-at="publish">Publier ma fiche</button>
+          <div class="auth-msg" id="ad-msg"></div>
+          <div class="auth-note" data-at="advNote"></div>
+        </div>
+      </div>
       <div class="notch"></div>
       <div class="statusbar"><span>9:41</span><span>📶 &nbsp;🔋</span></div>
       <div class="appbar">
+        <button class="searchBtn" style="right:auto;left:16px" onclick="doLogout()" aria-label="logout" title="Déconnexion">⎋</button>
         <button class="searchBtn" onclick="openSearch()" aria-label="search">🔍</button>
         <div class="flags" id="flags">
           <span class="flag on" data-l="es" onclick="setLang('es')">🇪🇸</span>
@@ -275,6 +365,7 @@
   </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const ICONS={bed:'<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>',
     home:'<path d="M4 11l8-7 8 7M6 10v10h5v-6h2v6h5V10"/>',
@@ -322,6 +413,7 @@
     document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.dataset.i18nPh);});
     document.querySelectorAll('.flag').forEach(f=>f.classList.toggle('on',f.dataset.l===LANG));
     buildGrid();buildCarousel();renderAgenda();renderNews();renderLodging();renderActive();
+    if(typeof localizeAuth==='function'){localizeAuth();fillAdvForm();}
   }
 
   /* ---------- Visuels par catégorie ---------- */
@@ -574,7 +666,8 @@
     const picks=[];
     cats.forEach(c=>{const ix=[];PLACES.forEach((p,i)=>{if(p.c===c)ix.push(i);});if(ix.length)picks.push(ix[Math.floor(Math.random()*ix.length)]);});
     const card=i=>{const p=PLACES[i],v=vis(p.c);return `<div class="ccard" onclick="openPlace(${i})"><div class="cimg" style="background:${v.grad}"><div class="wm wm-s">${svg(v.icon)}</div>${coverImg(p.img)}</div><div class="cb"><div class="ct">${tcat(p.c)}</div><h4>${p.n}</h4></div></div>`;};
-    const h=picks.map(card).join('');
+    const scard=s=>{const idx=SPONSORS.indexOf(s),v=vis(s.c);return `<div class="ccard" onclick="openSponsor(${idx})"><div class="cimg" style="background:${v.grad}"><div class="wm wm-s">${svg(v.icon)}</div>${coverImg(s.img)}<span class="cbadge">★</span></div><div class="cb"><div class="ct">${tcat(s.c)}</div><h4>${s.n}</h4></div></div>`;};
+    const h=sponsorsSorted().map(scard).join('')+picks.map(card).join('');
     el.innerHTML=`<div class="ctrack">${h}${h}</div>`;
   }
   function tileAction(k){
@@ -588,7 +681,11 @@
   }
 
   function renderAgenda(){document.getElementById('agendaList').innerHTML=EVENTS.map((e,i)=>{const dp=dParts(e.date_start),f=fill(e,false);return `<div class="evt" onclick="openIdx(${i})"><div class="date"><div class="d">${dp.d}</div><div class="m">${dp.m}</div></div><div class="info"><h3>${e.title}</h3><div class="loc">${e.location}</div><div class="row"><span class="pill">${tev(e.category)}</span></div></div><div class="ethumb" style="background:${f.bg}">${f.wm}${f.img}</div></div>`;}).join('');}
-  function renderNews(){document.getElementById('newsList').innerHTML=EVENTS.slice(0,4).map((e,i)=>{const f=fill(e,true);return `<div class="news" onclick="openIdx(${i})"><div class="img" style="background:${f.bg}">${f.wm}${f.img}<span class="tag">${tev(e.category)}</span></div><div class="body"><div class="src">${t('src_auto')} · ${e.source_name}</div><h3>${e.title}</h3></div></div>`;}).join('');}
+  function renderNews(){
+    const sp=sponsorsSorted().map(s=>{const idx=SPONSORS.indexOf(s),v=vis(s.c);return `<div class="news" onclick="openSponsor(${idx})"><div class="img" style="background:${v.grad}"><div class="wm">${svg(v.icon)}</div>${coverImg(s.img)}<span class="tag">★ ${tcat(s.c)}</span></div><div class="body"><div class="src">${t('src_spon')} · ${s.city}</div><h3>${s.n}</h3></div></div>`;}).join('');
+    const ev=EVENTS.slice(0,4).map((e,i)=>{const f=fill(e,true);return `<div class="news" onclick="openIdx(${i})"><div class="img" style="background:${f.bg}">${f.wm}${f.img}<span class="tag">${tev(e.category)}</span></div><div class="body"><div class="src">${t('src_auto')} · ${e.source_name}</div><h3>${e.title}</h3></div></div>`;}).join('');
+    document.getElementById('newsList').innerHTML=sp+ev;
+  }
 
   /* ---------- Filtres région / ville ---------- */
   let FILTER={region:'all',city:'all'};
@@ -729,8 +826,115 @@
   async function loadPlaces(){
     try{const r=await fetch(PLACES_URL+'?v='+Date.now(),{cache:'no-store'});if(r.ok){const data=await r.json();const arr=data.places||data;if(Array.isArray(arr)&&arr.length){PLACES=arr;FAV.clear();document.getElementById('favCnt').textContent=0;buildCarousel();renderActive();}}}catch(e){/* garde le répertoire de démonstration */}
   }
+  /* ================= COMPTES · SUPABASE ================= */
+  const SUPA_URL='https://sbegklqewvkzhcoadggt.supabase.co';
+  const SUPA_KEY='sb_publishable_2QQZ0_QXvWnzQFC2GCf9ow_ZjCRHrkF';
+  let SB=null; try{ if(window.supabase&&window.supabase.createClient) SB=window.supabase.createClient(SUPA_URL,SUPA_KEY); }catch(e){}
+  let SPONSORS=[];
+
+  const AUTH_T={
+    es:{tag:'Quintana Roo · Yucatán',login:'Iniciar sesión',signin:'Entrar',email:'Correo',pass:'Contraseña',passNew:'Contraseña (6+)',newHere:'¿Nuevo por aquí?',subCta:'Suscribirse 3$/mes',advCta:'Ser anunciante (gratis)',subTitle:'Suscripción',start:'Empezar',paySoon:'Pago con Stripe muy pronto — acceso activado por ahora.',advTitle:'Ser anunciante — 1 año gratis',bizName:'Nombre del negocio',bizDesc:'Descripción corta',bizAddr:'Dirección',bizTel:'Teléfono',bizWeb:'Sitio web',bizImg:'Foto (URL)',publish:'Publicar mi ficha',advNote:'1 año de acceso gratis + visibilidad en Recomendaciones y el carrusel. Máx. 4 por categoría y ciudad.',selCat:'Categoría',selCity:'Ciudad',working:'Procesando…',badCreds:'Datos incorrectos. Crea una cuenta abajo.',fields:'Completa los campos obligatorios.',limit:'Ya hay 4 empresas para esta categoría y ciudad.',reconnect:'Cuenta creada — vuelve a iniciar sesión.'},
+    en:{tag:'Quintana Roo · Yucatán',login:'Sign in',signin:'Sign in',email:'Email',pass:'Password',passNew:'Password (6+)',newHere:'New here?',subCta:'Subscribe $3/mo',advCta:'Become an advertiser (free)',subTitle:'Subscription',start:'Start',paySoon:'Stripe payment coming soon — access enabled for now.',advTitle:'Become an advertiser — 1 year free',bizName:'Business name',bizDesc:'Short description',bizAddr:'Address',bizTel:'Phone',bizWeb:'Website',bizImg:'Photo (URL)',publish:'Publish my listing',advNote:'1 year free access + visibility in Recommendations and the carousel. Max 4 per category and city.',selCat:'Category',selCity:'City',working:'Working…',badCreds:'Wrong details. Create an account below.',fields:'Fill the required fields.',limit:'Already 4 businesses for this category and city.',reconnect:'Account created — please sign in again.'},
+    fr:{tag:'Quintana Roo · Yucatán',login:'Connexion',signin:'Se connecter',email:'Email',pass:'Mot de passe',passNew:'Mot de passe (6+)',newHere:'Nouveau ?',subCta:'S’abonner 3$/mois',advCta:'Devenir annonceur (gratuit)',subTitle:'Abonnement',start:'Commencer',paySoon:'Paiement Stripe bientôt — accès activé pour l’instant.',advTitle:'Devenir annonceur — 1 an gratuit',bizName:'Nom de l’entreprise',bizDesc:'Description courte',bizAddr:'Adresse',bizTel:'Téléphone',bizWeb:'Site web',bizImg:'Photo (URL)',publish:'Publier ma fiche',advNote:'1 an d’accès gratuit + visibilité dans Recommandations et le carrousel. Max 4 par catégorie et par ville.',selCat:'Catégorie',selCity:'Ville',working:'En cours…',badCreds:'Identifiants incorrects. Crée un compte ci-dessous.',fields:'Remplis les champs requis.',limit:'Déjà 4 entreprises pour cette catégorie et cette ville.',reconnect:'Compte créé — reconnecte-toi.'},
+    it:{tag:'Quintana Roo · Yucatán',login:'Accedi',signin:'Accedi',email:'Email',pass:'Password',passNew:'Password (6+)',newHere:'Nuovo qui?',subCta:'Abbonati 3$/mese',advCta:'Diventa inserzionista (gratis)',subTitle:'Abbonamento',start:'Inizia',paySoon:'Pagamento Stripe in arrivo — accesso attivato per ora.',advTitle:'Diventa inserzionista — 1 anno gratis',bizName:'Nome attività',bizDesc:'Breve descrizione',bizAddr:'Indirizzo',bizTel:'Telefono',bizWeb:'Sito web',bizImg:'Foto (URL)',publish:'Pubblica la mia scheda',advNote:'1 anno di accesso gratis + visibilità in Consigli e nel carosello. Max 4 per categoria e città.',selCat:'Categoria',selCity:'Città',working:'In corso…',badCreds:'Dati errati. Crea un account qui sotto.',fields:'Compila i campi richiesti.',limit:'Già 4 attività per questa categoria e città.',reconnect:'Account creato — accedi di nuovo.'},
+    de:{tag:'Quintana Roo · Yucatán',login:'Anmelden',signin:'Anmelden',email:'E-Mail',pass:'Passwort',passNew:'Passwort (6+)',newHere:'Neu hier?',subCta:'Abo 3$/Mon.',advCta:'Werbepartner werden (gratis)',subTitle:'Abo',start:'Starten',paySoon:'Stripe-Zahlung bald — Zugang vorerst aktiviert.',advTitle:'Werbepartner werden — 1 Jahr gratis',bizName:'Firmenname',bizDesc:'Kurze Beschreibung',bizAddr:'Adresse',bizTel:'Telefon',bizWeb:'Website',bizImg:'Foto (URL)',publish:'Eintrag veröffentlichen',advNote:'1 Jahr Gratiszugang + Sichtbarkeit in Empfehlungen und im Karussell. Max 4 pro Kategorie und Stadt.',selCat:'Kategorie',selCity:'Stadt',working:'Läuft…',badCreds:'Falsche Daten. Erstelle unten ein Konto.',fields:'Bitte Pflichtfelder ausfüllen.',limit:'Bereits 4 Firmen für diese Kategorie und Stadt.',reconnect:'Konto erstellt — bitte erneut anmelden.'}
+  };
+  function at(k){return (AUTH_T[LANG]&&AUTH_T[LANG][k])||AUTH_T.es[k]||k;}
+  function localizeAuth(){
+    document.querySelectorAll('[data-at]').forEach(e=>e.textContent=at(e.dataset.at));
+    document.querySelectorAll('[data-atph]').forEach(e=>e.placeholder=at(e.dataset.atph));
+  }
+  function fillAdvForm(){
+    const cat=document.getElementById('ad-cat'),city=document.getElementById('ad-city');
+    if(cat)cat.innerHTML=`<option value="">${at('selCat')}</option>`+PC.filter(k=>k!=='WiFi').map(k=>`<option value="${k}">${tcat(k)}</option>`).join('');
+    if(city)city.innerHTML=`<option value="">${at('selCity')}</option>`+Object.keys(CITY).map(c=>`<option value="${c}">${c}</option>`).join('');
+  }
+  function showPane(p){['login','sub','adv'].forEach(x=>{const el=document.getElementById('pane-'+x);if(el)el.style.display=(x===p)?'block':'none';});}
+  function aMsg(id,k,ok){const e=document.getElementById(id);if(!e)return;e.textContent=(AUTH_T[LANG]&&AUTH_T[LANG][k])||k;e.style.color=ok?'#1c8a4e':'#c0392b';}
+
+  async function hasAccess(){
+    if(!SB)return false;
+    const {data:{user}}=await SB.auth.getUser();
+    if(!user)return false;
+    const {data}=await SB.from('profiles').select('sub_status,account_type').eq('id',user.id).maybeSingle();
+    return !!(data&&(data.sub_status==='active'||data.account_type==='advertiser'));
+  }
+  async function enterApp(){document.getElementById('authGate').style.display='none';try{await loadSponsors();}catch(e){}}
+
+  async function doLogin(){
+    if(!SB){enterApp();return;}
+    const email=document.getElementById('li-email').value.trim(),pass=document.getElementById('li-pass').value;
+    if(!email||!pass){aMsg('li-msg','fields');return;}
+    aMsg('li-msg','working',true);
+    const {error}=await SB.auth.signInWithPassword({email,password:pass});
+    if(error){aMsg('li-msg','badCreds');return;}
+    if(await hasAccess())enterApp(); else showPane('sub');
+  }
+  async function ensureAccount(email,pass,msgId){
+    let {error}=await SB.auth.signUp({email,password:pass});
+    if(error&&!/already|registered|exists/i.test(error.message)){aMsg(msgId,error.message||'fields');return false;}
+    const si=await SB.auth.signInWithPassword({email,password:pass});
+    if(si.error){aMsg(msgId,'reconnect');return false;}
+    return true;
+  }
+  async function doSubscribe(){
+    if(!SB){enterApp();return;}
+    const email=document.getElementById('su-email').value.trim(),pass=document.getElementById('su-pass').value;
+    if(!email||pass.length<6){aMsg('su-msg','fields');return;}
+    aMsg('su-msg','working',true);
+    if(!await ensureAccount(email,pass,'su-msg'))return;
+    const {data:{user}}=await SB.auth.getUser();
+    await SB.from('profiles').update({sub_status:'active',account_type:'subscriber'}).eq('id',user.id);
+    enterApp();
+  }
+  async function doAdvertiser(){
+    if(!SB){enterApp();return;}
+    const g=id=>document.getElementById(id).value.trim();
+    const email=g('ad-email'),pass=document.getElementById('ad-pass').value,name=g('ad-name'),cat=document.getElementById('ad-cat').value,city=document.getElementById('ad-city').value;
+    if(!email||pass.length<6||!name||!cat||!city){aMsg('ad-msg','fields');return;}
+    aMsg('ad-msg','working',true);
+    if(!await ensureAccount(email,pass,'ad-msg'))return;
+    const {data:{user}}=await SB.auth.getUser();
+    let lat=null,lng=null;
+    try{const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:6000}));lat=pos.coords.latitude;lng=pos.coords.longitude;}catch(e){}
+    const region=(CITY[city]&&CITY[city].r)||'';
+    const rec={owner:user.id,name,category:cat,city,region,description:g('ad-desc'),website:g('ad-web'),facebook:g('ad-fb'),instagram:g('ad-ig'),phone:g('ad-tel'),address:g('ad-addr'),lat,lng,image_url:g('ad-img')};
+    const ins=await SB.from('advertisers').insert(rec);
+    if(ins.error){ if(/LIMIT12|limit/i.test(ins.error.message))aMsg('ad-msg','limit'); else aMsg('ad-msg',ins.error.message||'fields'); return; }
+    await SB.from('profiles').update({account_type:'advertiser',sub_status:'active'}).eq('id',user.id);
+    enterApp();
+  }
+  async function doLogout(){ if(SB){try{await SB.auth.signOut();}catch(e){}} location.reload(); }
+
+  function sponsorDist(s){ if(!USERLOC)return Infinity; let la=s.lat,ln=s.lng; if(!(la&&ln)){const c=CITY[s.city];if(c){la=c.co[0];ln=c.co[1];}else return Infinity;} return distKm(USERLOC.lat,USERLOC.lng,la,ln); }
+  function sponsorsSorted(){ const a=SPONSORS.slice(); if(USERLOC)a.sort((x,y)=>sponsorDist(x)-sponsorDist(y)); return a; }
+  async function loadSponsors(){
+    if(!SB){SPONSORS=[];return;}
+    const {data,error}=await SB.from('advertisers').select('*');
+    SPONSORS=(!error&&data)?data.map(a=>({n:a.name,c:a.category,city:a.city,region:a.region||'',d:a.description||'',website:a.website||'',facebook:a.facebook||'',instagram:a.instagram||'',phone:a.phone||'',address:a.address||'',lat:a.lat,lng:a.lng,img:a.image_url||'',sponsor:true})):[];
+    buildCarousel();renderNews();
+  }
+  function openSponsor(i){
+    const p=SPONSORS[i];if(!p)return;const v=vis(p.c);
+    const gq=(p.lat&&p.lng)?`${p.lat},${p.lng}`:encodeURIComponent(p.n+' '+(p.address||p.city||''));
+    const gmaps=`<a href="https://www.google.com/maps/search/?api=1&query=${gq}" target="_blank" rel="noopener">🗺️ Google Maps</a>`;
+    const web=p.website?`<a href="${p.website}" target="_blank" rel="noopener">🌐 Web</a>`:'';
+    const tel=p.phone?`<a href="tel:${p.phone}">📞 Tel</a>`:'';
+    const fb=p.facebook?`<a href="${p.facebook}" target="_blank" rel="noopener">📘 Facebook</a>`:'';
+    const ig=p.instagram?`<a href="${p.instagram}" target="_blank" rel="noopener">📷 Instagram</a>`:'';
+    const addr=p.address?`<br><span style="color:var(--muted)">📍 ${p.address}</span>`:'';
+    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${v.grad}"><div class="wm">${svg(v.icon)}</div>${coverImg(p.img)}<span class="hchip">★ ${tcat(p.c)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${p.n}</h2><div class="m2"><span>📍 ${p.city}</span></div><p class="desc">${p.d||''}${addr}</p><div class="social">${gmaps}${web}${tel}${fb}${ig}</div></div>`;
+    document.getElementById('modal').classList.add('show');
+  }
+  async function initAuth(){
+    if(!SB){document.getElementById('authGate').style.display='none';return;}
+    showPane('login');
+    try{ if(await hasAccess())enterApp(); }catch(e){}
+  }
+
   loadEvents();
   loadPlaces();
+  try{localizeAuth();fillAdvForm();initAuth();}catch(e){console.error(e);var g=document.getElementById('authGate');if(g)g.style.display='none';}
 </script>
 </body>
 </html>

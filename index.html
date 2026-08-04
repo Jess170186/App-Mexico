@@ -652,13 +652,13 @@
 
   async function loadEvents(){
     let stamp='· demo';
-    try{const r=await fetch(EVENTS_URL,{cache:'no-store'});if(r.ok){const data=await r.json();if(data.events&&data.events.length){EVENTS=data.events;if(data.updated_at)stamp='· '+data.updated_at.slice(0,10);}}}catch(e){}
+    try{const r=await fetch(EVENTS_URL+'?v='+Date.now(),{cache:'no-store'});if(r.ok){const data=await r.json();if(data.events&&data.events.length){EVENTS=data.events;if(data.updated_at)stamp='· '+data.updated_at.slice(0,10);}}}catch(e){}
     document.getElementById('agendaStamp').textContent=stamp;
     applyLang();
     locate();   // géolocalisation par défaut (repli sur « tout » si refusée ou trop loin)
   }
   async function loadPlaces(){
-    try{const r=await fetch(PLACES_URL,{cache:'no-store'});if(r.ok){const data=await r.json();const arr=data.places||data;if(Array.isArray(arr)&&arr.length){PLACES=arr;FAV.clear();document.getElementById('favCnt').textContent=0;buildCarousel();renderActive();}}}catch(e){/* garde le répertoire de démonstration */}
+    try{const r=await fetch(PLACES_URL+'?v='+Date.now(),{cache:'no-store'});if(r.ok){const data=await r.json();const arr=data.places||data;if(Array.isArray(arr)&&arr.length){PLACES=arr;FAV.clear();document.getElementById('favCnt').textContent=0;buildCarousel();renderActive();}}}catch(e){/* garde le répertoire de démonstration */}
   }
   loadEvents();
   loadPlaces();

@@ -35,20 +35,32 @@ import anthropic
 # 1) SOURCES — ajoute/retire librement des sites ici
 # ---------------------------------------------------------------------------
 SOURCES = [
-    # Quintana Roo
+    # ---- Quintana Roo ----
     {"name": "SITUR Quintana Roo", "region": "Quintana Roo",
      "url": "https://siturq.gob.mx/eventos"},
-    {"name": "Quintana Roo Hoy",   "region": "Quintana Roo",
+    {"name": "Quintana Roo Hoy (cultura)", "region": "Quintana Roo",
      "url": "https://quintanaroohoy.com/cultura/"},
-    # Yucatán
+    {"name": "México es Cultura — Quintana Roo", "region": "Quintana Roo",
+     "url": "https://www.mexicoescultura.com/estado/89/quintana-roo"},
+    {"name": "eTicket — Cancún", "region": "Quintana Roo",
+     "url": "https://www.eticket.mx/eventos.aspx?idciudad=42"},
+    {"name": "Viva Playa — Playa del Carmen", "region": "Quintana Roo",
+     "url": "https://www.vivaplaya.net/viva/en/category/eventos-en/"},
+    # ---- Yucatán ----
     {"name": "Ayuntamiento de Mérida", "region": "Yucatán",
      "url": "https://www.merida.gob.mx/eventos"},
-    {"name": "Gobierno de Yucatán",    "region": "Yucatán",
+    {"name": "Gobierno de Yucatán", "region": "Yucatán",
      "url": "https://www.yucatan.gob.mx/"},
+    {"name": "México es Cultura — Yucatán", "region": "Yucatán",
+     "url": "https://www.mexicoescultura.com/estado/97/yucatan"},
+    {"name": "eTicket — Mérida", "region": "Yucatán",
+     "url": "https://www.eticket.mx/eventos.aspx?idciudad=91"},
+    {"name": "Mérida Experiences (festivals)", "region": "Yucatán",
+     "url": "https://meridaexperiences.com/eventos-festivales-merida-yucatan/"},
 ]
 
 MODEL = "claude-sonnet-4-5"          # rapide et économique pour l'extraction
-MAX_EVENTS_PER_SOURCE = 15
+MAX_EVENTS_PER_SOURCE = 20
 OUTPUT = os.path.join(os.path.dirname(__file__), "events.json")
 CATEGORIES = ["Música", "Gastronomía", "Cultura", "Deporte", "Familia",
               "Fiesta", "Arte", "Feria", "Otro"]
@@ -108,13 +120,26 @@ def clean_text(html_str, limit=14000):
     return text[:limit]
 
 def og_meta(page_html, base_url):
-    """Récupère l'image et la description OpenGraph d'une page (og:image / og:description)."""
+    """Récupère une IMAGE + une description depuis une page.
+    1) balises OpenGraph/Twitter (og:image, twitter:image) ;
+    2) sinon, première vraie photo de contenu (on ignore logos/icônes)."""
     soup = BeautifulSoup(page_html, "html.parser")
     def meta(prop):
         el = soup.find("meta", property=prop) or soup.find("meta", attrs={"name": prop})
         return el["content"].strip() if el and el.get("content") else ""
-    img = meta("og:image") or meta("twitter:image")
+    img = meta("og:image") or meta("twitter:image") or meta("og:image:secure_url")
     desc = meta("og:description") or meta("description")
+    if not img:
+        skip = ("logo", "icon", "sprite", "avatar", "placeholder", "blank",
+                "pixel", "spinner", "loader", "flag")
+        for im in soup.find_all("img"):
+            src = (im.get("src") or im.get("data-src") or im.get("data-lazy-src") or "").strip()
+            if not src or src.startswith("data:"):
+                continue
+            if any(k in src.lower() for k in skip):
+                continue
+            img = src
+            break
     if img:
         img = urljoin(base_url, img)
     return img, html.unescape(desc)

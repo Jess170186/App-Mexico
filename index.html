@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f7d7b">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="App Mexico">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>App Mexico — Salea</title>
 <style>
   :root{--teal:#0f7d7b;--teal2:#0b5c5b;--deep:#083b3d;--deep2:#05282a;--gold:#c7a24c;--gold-l:#e6cd84;--gold-d:#9c7a2e;--cream:#f2e8d6;--ivory:#fdf8ee;--line:#e7d9bf;--ink:#152a2b;--muted:#7c8a86}
@@ -86,6 +92,19 @@
   .auth-row .auth-in{width:50%}
   select.auth-in{-webkit-appearance:none;appearance:none;background:#fff}
   .cimg .cbadge{position:absolute;top:6px;left:6px;background:var(--gold);color:#3a2e0e;font-size:9px;font-weight:800;padding:2px 6px;border-radius:10px;z-index:2}
+  .tripday{margin-bottom:14px}
+  .td-h{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold-d);margin:6px 0 8px}
+  .tripitem,.offer{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;margin-bottom:8px}
+  .offer{cursor:pointer}
+  .tripitem .ti-ic,.offer .of-ic{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+  .tripitem .ti-ic svg,.offer .of-ic svg{width:20px;height:20px}
+  .ti-b,.of-b{flex:1;min-width:0}
+  .tripitem h4,.offer h4{margin:2px 0 0;font-size:14px;color:var(--teal2)}
+  .ti-s,.of-s{font-size:11px;color:var(--muted)}
+  .ti-x{color:var(--muted);cursor:pointer;font-size:15px;padding:4px 6px;flex:none}
+  .of-tag{display:inline-block;background:var(--gold);color:#3a2e0e;font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px}
+  .toast{position:absolute;left:50%;bottom:88px;transform:translateX(-50%) translateY(10px);background:var(--deep);color:#fff;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:20px;opacity:0;transition:.25s;z-index:150;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .tile{background:var(--ivory);border:1px solid var(--line);border-radius:16px;padding:12px 6px 9px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:.15s;box-shadow:0 3px 8px rgba(20,42,43,.05)}
   .tile:active{transform:scale(.95)}
@@ -259,6 +278,7 @@
             <input class="auth-in" id="ad-ig" placeholder="Instagram">
           </div>
           <input class="auth-in" id="ad-img" data-atph="bizImg" placeholder="Photo (URL)">
+          <input class="auth-in" id="ad-offer" data-atph="bizOffer" placeholder="Offre membres (ex: -15%)">
           <button class="auth-btn gold" onclick="doAdvertiser()" data-at="publish">Publier ma fiche</button>
           <div class="auth-msg" id="ad-msg"></div>
           <div class="auth-note" data-at="advNote"></div>
@@ -349,6 +369,20 @@
           <div class="caps" data-i18n="caps_lodging">Hébergement</div>
           <div id="lodgingList"></div>
         </div>
+
+        <div class="view" id="v-offers">
+          <button class="backbtn" onclick="showView('home')">←&nbsp;<span data-i18n="back">Retour</span></button>
+          <div class="caps" data-at="tileOffres">Offres</div>
+          <button class="auth-btn" style="margin-bottom:12px" onclick="enableNotifs()" data-at="notifBtn">🔔 Activer les alertes</button>
+          <div id="offersList"></div>
+        </div>
+
+        <div class="view" id="v-trip">
+          <button class="backbtn" onclick="showView('home')">←&nbsp;<span data-i18n="back">Retour</span></button>
+          <div class="caps" data-at="tileVoyage">Mon voyage</div>
+          <button class="auth-btn gold" style="margin-bottom:14px" onclick="planDay()" data-at="planDay">Plan ma journée ✨</button>
+          <div id="tripList"></div>
+        </div>
       </div>
 
       <div class="fab" id="fab" onclick="goFav()">__ICON_heart__<span class="cnt" id="favCnt">0</span></div>
@@ -414,6 +448,7 @@
     document.querySelectorAll('.flag').forEach(f=>f.classList.toggle('on',f.dataset.l===LANG));
     buildGrid();buildCarousel();renderAgenda();renderNews();renderLodging();renderActive();
     if(typeof localizeAuth==='function'){localizeAuth();fillAdvForm();}
+    if(typeof renderOffers==='function'){renderOffers();renderTrip();}
   }
 
   /* ---------- Visuels par catégorie ---------- */
@@ -655,8 +690,8 @@
   function dParts(iso){const p=(iso||'').split('-');return {d:p[2]||'—',m:MONTHS[(+p[1]||1)-1]||''};}
 
   /* ---------- Grille d'accueil ---------- */
-  const TILES=[['ticket','eventos'],['fork','Restaurantes'],['cocktail','Bares'],['camera','Actividades'],['beach','Playas'],['bag','Compras'],['train','Transporte'],['wifi','WiFi'],['star','novedades'],['heart','fav'],['map','mapa'],['bed','hospedaje']];
-  function tileLabel(k){if(PC.indexOf(k)>=0)return tcat(k);const m={mapa:'map_title',fav:'fav_short',planes:'tab_plans',eventos:'eventos',novedades:'novedades',hospedaje:'hospedaje'};return t(m[k]||k);}
+  const TILES=[['ticket','eventos'],['fork','Restaurantes'],['cocktail','Bares'],['camera','Actividades'],['beach','Playas'],['bag','Compras'],['train','Transporte'],['wifi','WiFi'],['star','novedades'],['tag','offres'],['calendar','voyage'],['heart','fav'],['map','mapa'],['bed','hospedaje']];
+  function tileLabel(k){if(PC.indexOf(k)>=0)return tcat(k);if(k==='offres')return at('tileOffres');if(k==='voyage')return at('tileVoyage');const m={mapa:'map_title',fav:'fav_short',planes:'tab_plans',eventos:'eventos',novedades:'novedades',hospedaje:'hospedaje'};return t(m[k]||k);}
   function buildGrid(){document.getElementById('grid').innerHTML=TILES.map(x=>`<div class="tile" onclick="tileAction('${x[1]}')"><div class="ic">${svg(x[0])}</div><span>${tileLabel(x[1])}</span></div>`).join('');}
   const FORYOU={es:'Sugerencias para ti',en:'Picks for you',fr:'Suggestions pour toi',it:'Consigli per te',de:'Für dich'};
   function buildCarousel(){
@@ -678,6 +713,8 @@
     else if(k==='mapa')showView('map');
     else if(k==='planes')showView('plans');
     else if(k==='hospedaje')showView('lodging');
+    else if(k==='offres')showView('offers');
+    else if(k==='voyage'){showView('trip');renderTrip();}
   }
 
   function renderAgenda(){document.getElementById('agendaList').innerHTML=EVENTS.map((e,i)=>{const dp=dParts(e.date_start),f=fill(e,false);return `<div class="evt" onclick="openIdx(${i})"><div class="date"><div class="d">${dp.d}</div><div class="m">${dp.m}</div></div><div class="info"><h3>${e.title}</h3><div class="loc">${e.location}</div><div class="row"><span class="pill">${tev(e.category)}</span></div></div><div class="ethumb" style="background:${f.bg}">${f.wm}${f.img}</div></div>`;}).join('');}
@@ -748,10 +785,11 @@
 
   /* ---------- Fiches (modal) ---------- */
   function openObj(e){
+    CUROBJ=e;
     const dp=dParts(e.date_start);const src=(e.sponsor?t('src_spon'):t('src_auto'))+' · '+e.source_name;
     const link=(e.source_url&&e.source_url!=='#')?`<a href="${e.source_url}" target="_blank" rel="noopener">${t('btn_src')}</a>`:`<a>${t('btn_src')}</a>`;
     const f=fill(e,true);
-    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${f.bg}">${f.wm}${f.img}<span class="hchip">${tev(e.category)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${e.title}</h2><div class="m2"><span>${dp.d} ${dp.m}</span><span>${e.location}</span></div><div class="srcbar"><span class="d"></span> ${src}</div><p class="desc">${e.description}</p><div class="social">${link}<a>${t('btn_ig')}</a><a>${t('btn_share')}</a></div><button class="btn" style="margin-top:16px" onclick="closeModal()">${t('btn_add')}</button></div>`;
+    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${f.bg}">${f.wm}${f.img}<span class="hchip">${tev(e.category)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${e.title}</h2><div class="m2"><span>${dp.d} ${dp.m}</span><span>${e.location}</span></div><div class="srcbar"><span class="d"></span> ${src}</div><p class="desc">${e.description}</p><div class="social">${link}<a onclick="addTripFromObj();closeModal()">${at('tripAdd')}</a><a>${t('btn_share')}</a></div><button class="btn" style="margin-top:16px" onclick="addTripFromObj();closeModal()">${t('btn_add')}</button></div>`;
     document.getElementById('modal').classList.add('show');
   }
   function openIdx(i){openObj(EVENTS[i]);}
@@ -766,7 +804,7 @@
     const tel=p.phone?`<a href="tel:${p.phone}">📞 Tel</a>`:'';
     const fb=p.facebook?`<a href="${p.facebook}" target="_blank" rel="noopener">📘 Facebook</a>`:'';
     const ig=p.instagram?`<a href="${p.instagram}" target="_blank" rel="noopener">📷 Instagram</a>`:'';
-    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${v.grad}"><div class="wm">${svg(v.icon)}</div>${coverImg(p.img)}<span class="hchip">${tcat(p.c)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${p.n}</h2><div class="m2"><span>📍 ${p.city}</span>${p.rt?`<span>★ ${p.rt}</span>`:''}${p.w?`<span>✓ WiFi</span>`:''}${km}</div><p class="desc">${p.d}${addr}</p><div class="social"><a onclick="toggleFav(${i});renderPlaceModal(${i})">${on?t('fav_remove'):t('fav_add')}</a>${gmaps}${web}${tel}${fb}${ig}</div></div>`;
+    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${v.grad}"><div class="wm">${svg(v.icon)}</div>${coverImg(p.img)}<span class="hchip">${tcat(p.c)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${p.n}</h2><div class="m2"><span>📍 ${p.city}</span>${p.rt?`<span>★ ${p.rt}</span>`:''}${p.w?`<span>✓ WiFi</span>`:''}${km}</div><p class="desc">${p.d}${addr}</p><div class="social"><a onclick="toggleFav(${i});renderPlaceModal(${i})">${on?t('fav_remove'):t('fav_add')}</a><a onclick="addTripFromPlace(${i})">${at('tripAdd')}</a>${gmaps}${web}${tel}${fb}${ig}</div></div>`;
     document.getElementById('modal').classList.add('show');
   }
   function renderPlaceModal(i){openPlace(i);}
@@ -774,7 +812,7 @@
   document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
 
   /* ---------- Navigation ---------- */
-  const views={home:'v-home',agenda:'v-agenda',news:'v-news',list:'v-list',fav:'v-fav',map:'v-map',plans:'v-plans',search:'v-search',lodging:'v-lodging'};
+  const views={home:'v-home',agenda:'v-agenda',news:'v-news',list:'v-list',fav:'v-fav',map:'v-map',plans:'v-plans',search:'v-search',lodging:'v-lodging',offers:'v-offers',trip:'v-trip'};
   const LODGING=[
     {n:'Salea Homes',u:'https://saleah.stays.net/',dom:'saleah.stays.net',own:true},
     {n:'Booking.com',u:'https://www.booking.com/',dom:'booking.com'},
@@ -833,11 +871,11 @@
   let SPONSORS=[];
 
   const AUTH_T={
-    es:{tag:'Quintana Roo · Yucatán',login:'Iniciar sesión',signin:'Entrar',email:'Correo',pass:'Contraseña',passNew:'Contraseña (6+)',newHere:'¿Nuevo por aquí?',subCta:'Suscribirse 3$/mes',advCta:'Ser anunciante (gratis)',subTitle:'Suscripción',start:'Empezar',paySoon:'Pago con Stripe muy pronto — acceso activado por ahora.',advTitle:'Ser anunciante — 1 año gratis',bizName:'Nombre del negocio',bizDesc:'Descripción corta',bizAddr:'Dirección',bizTel:'Teléfono',bizWeb:'Sitio web',bizImg:'Foto (URL)',publish:'Publicar mi ficha',advNote:'1 año de acceso gratis + visibilidad en Recomendaciones y el carrusel. Máx. 4 por categoría y ciudad.',selCat:'Categoría',selCity:'Ciudad',working:'Procesando…',badCreds:'Datos incorrectos. Crea una cuenta abajo.',fields:'Completa los campos obligatorios.',limit:'Ya hay 4 empresas para esta categoría y ciudad.',reconnect:'Cuenta creada — vuelve a iniciar sesión.'},
-    en:{tag:'Quintana Roo · Yucatán',login:'Sign in',signin:'Sign in',email:'Email',pass:'Password',passNew:'Password (6+)',newHere:'New here?',subCta:'Subscribe $3/mo',advCta:'Become an advertiser (free)',subTitle:'Subscription',start:'Start',paySoon:'Stripe payment coming soon — access enabled for now.',advTitle:'Become an advertiser — 1 year free',bizName:'Business name',bizDesc:'Short description',bizAddr:'Address',bizTel:'Phone',bizWeb:'Website',bizImg:'Photo (URL)',publish:'Publish my listing',advNote:'1 year free access + visibility in Recommendations and the carousel. Max 4 per category and city.',selCat:'Category',selCity:'City',working:'Working…',badCreds:'Wrong details. Create an account below.',fields:'Fill the required fields.',limit:'Already 4 businesses for this category and city.',reconnect:'Account created — please sign in again.'},
-    fr:{tag:'Quintana Roo · Yucatán',login:'Connexion',signin:'Se connecter',email:'Email',pass:'Mot de passe',passNew:'Mot de passe (6+)',newHere:'Nouveau ?',subCta:'S’abonner 3$/mois',advCta:'Devenir annonceur (gratuit)',subTitle:'Abonnement',start:'Commencer',paySoon:'Paiement Stripe bientôt — accès activé pour l’instant.',advTitle:'Devenir annonceur — 1 an gratuit',bizName:'Nom de l’entreprise',bizDesc:'Description courte',bizAddr:'Adresse',bizTel:'Téléphone',bizWeb:'Site web',bizImg:'Photo (URL)',publish:'Publier ma fiche',advNote:'1 an d’accès gratuit + visibilité dans Recommandations et le carrousel. Max 4 par catégorie et par ville.',selCat:'Catégorie',selCity:'Ville',working:'En cours…',badCreds:'Identifiants incorrects. Crée un compte ci-dessous.',fields:'Remplis les champs requis.',limit:'Déjà 4 entreprises pour cette catégorie et cette ville.',reconnect:'Compte créé — reconnecte-toi.'},
-    it:{tag:'Quintana Roo · Yucatán',login:'Accedi',signin:'Accedi',email:'Email',pass:'Password',passNew:'Password (6+)',newHere:'Nuovo qui?',subCta:'Abbonati 3$/mese',advCta:'Diventa inserzionista (gratis)',subTitle:'Abbonamento',start:'Inizia',paySoon:'Pagamento Stripe in arrivo — accesso attivato per ora.',advTitle:'Diventa inserzionista — 1 anno gratis',bizName:'Nome attività',bizDesc:'Breve descrizione',bizAddr:'Indirizzo',bizTel:'Telefono',bizWeb:'Sito web',bizImg:'Foto (URL)',publish:'Pubblica la mia scheda',advNote:'1 anno di accesso gratis + visibilità in Consigli e nel carosello. Max 4 per categoria e città.',selCat:'Categoria',selCity:'Città',working:'In corso…',badCreds:'Dati errati. Crea un account qui sotto.',fields:'Compila i campi richiesti.',limit:'Già 4 attività per questa categoria e città.',reconnect:'Account creato — accedi di nuovo.'},
-    de:{tag:'Quintana Roo · Yucatán',login:'Anmelden',signin:'Anmelden',email:'E-Mail',pass:'Passwort',passNew:'Passwort (6+)',newHere:'Neu hier?',subCta:'Abo 3$/Mon.',advCta:'Werbepartner werden (gratis)',subTitle:'Abo',start:'Starten',paySoon:'Stripe-Zahlung bald — Zugang vorerst aktiviert.',advTitle:'Werbepartner werden — 1 Jahr gratis',bizName:'Firmenname',bizDesc:'Kurze Beschreibung',bizAddr:'Adresse',bizTel:'Telefon',bizWeb:'Website',bizImg:'Foto (URL)',publish:'Eintrag veröffentlichen',advNote:'1 Jahr Gratiszugang + Sichtbarkeit in Empfehlungen und im Karussell. Max 4 pro Kategorie und Stadt.',selCat:'Kategorie',selCity:'Stadt',working:'Läuft…',badCreds:'Falsche Daten. Erstelle unten ein Konto.',fields:'Bitte Pflichtfelder ausfüllen.',limit:'Bereits 4 Firmen für diese Kategorie und Stadt.',reconnect:'Konto erstellt — bitte erneut anmelden.'}
+    es:{tag:'Quintana Roo · Yucatán',login:'Iniciar sesión',signin:'Entrar',email:'Correo',pass:'Contraseña',passNew:'Contraseña (6+)',newHere:'¿Nuevo por aquí?',subCta:'Suscribirse 3$/mes',advCta:'Ser anunciante (gratis)',subTitle:'Suscripción',start:'Empezar',paySoon:'Pago con Stripe muy pronto — acceso activado por ahora.',advTitle:'Ser anunciante — 1 año gratis',bizName:'Nombre del negocio',bizDesc:'Descripción corta',bizAddr:'Dirección',bizTel:'Teléfono',bizWeb:'Sitio web',bizImg:'Foto (URL)',publish:'Publicar mi ficha',advNote:'1 año de acceso gratis + visibilidad en Recomendaciones y el carrusel. Máx. 4 por categoría y ciudad.',selCat:'Categoría',selCity:'Ciudad',working:'Procesando…',badCreds:'Datos incorrectos. Crea una cuenta abajo.',fields:'Completa los campos obligatorios.',limit:'Ya hay 4 empresas para esta categoría y ciudad.',reconnect:'Cuenta creada — vuelve a iniciar sesión.',tileOffres:'Ofertas',tileVoyage:'Mi viaje',tripAdd:'＋ Mi viaje',tripEmpty:'Aún nada en tu viaje. Añade lugares y eventos con ＋.',planDay:'Planea mi día ✨',dayLabel:'Día',offersEmpty:'Todavía no hay ofertas.',bizOffer:'Oferta para miembros (ej: -15%)',added:'✓ Añadido a tu viaje',notifBtn:'🔔 Activar alertas'},
+    en:{tag:'Quintana Roo · Yucatán',login:'Sign in',signin:'Sign in',email:'Email',pass:'Password',passNew:'Password (6+)',newHere:'New here?',subCta:'Subscribe $3/mo',advCta:'Become an advertiser (free)',subTitle:'Subscription',start:'Start',paySoon:'Stripe payment coming soon — access enabled for now.',advTitle:'Become an advertiser — 1 year free',bizName:'Business name',bizDesc:'Short description',bizAddr:'Address',bizTel:'Phone',bizWeb:'Website',bizImg:'Photo (URL)',publish:'Publish my listing',advNote:'1 year free access + visibility in Recommendations and the carousel. Max 4 per category and city.',selCat:'Category',selCity:'City',working:'Working…',badCreds:'Wrong details. Create an account below.',fields:'Fill the required fields.',limit:'Already 4 businesses for this category and city.',reconnect:'Account created — please sign in again.',tileOffres:'Deals',tileVoyage:'My trip',tripAdd:'＋ My trip',tripEmpty:'Nothing in your trip yet. Add places and events with ＋.',planDay:'Plan my day ✨',dayLabel:'Day',offersEmpty:'No deals yet.',bizOffer:'Member deal (e.g. -15%)',added:'✓ Added to your trip',notifBtn:'🔔 Enable alerts'},
+    fr:{tag:'Quintana Roo · Yucatán',login:'Connexion',signin:'Se connecter',email:'Email',pass:'Mot de passe',passNew:'Mot de passe (6+)',newHere:'Nouveau ?',subCta:'S’abonner 3$/mois',advCta:'Devenir annonceur (gratuit)',subTitle:'Abonnement',start:'Commencer',paySoon:'Paiement Stripe bientôt — accès activé pour l’instant.',advTitle:'Devenir annonceur — 1 an gratuit',bizName:'Nom de l’entreprise',bizDesc:'Description courte',bizAddr:'Adresse',bizTel:'Téléphone',bizWeb:'Site web',bizImg:'Photo (URL)',publish:'Publier ma fiche',advNote:'1 an d’accès gratuit + visibilité dans Recommandations et le carrousel. Max 4 par catégorie et par ville.',selCat:'Catégorie',selCity:'Ville',working:'En cours…',badCreds:'Identifiants incorrects. Crée un compte ci-dessous.',fields:'Remplis les champs requis.',limit:'Déjà 4 entreprises pour cette catégorie et cette ville.',reconnect:'Compte créé — reconnecte-toi.',tileOffres:'Offres',tileVoyage:'Mon voyage',tripAdd:'＋ Mon voyage',tripEmpty:'Rien dans ton voyage. Ajoute des lieux et événements avec ＋.',planDay:'Plan ma journée ✨',dayLabel:'Jour',offersEmpty:'Pas encore d’offres.',bizOffer:'Offre membres (ex: -15%)',added:'✓ Ajouté à ton voyage',notifBtn:'🔔 Activer les alertes'},
+    it:{tag:'Quintana Roo · Yucatán',login:'Accedi',signin:'Accedi',email:'Email',pass:'Password',passNew:'Password (6+)',newHere:'Nuovo qui?',subCta:'Abbonati 3$/mese',advCta:'Diventa inserzionista (gratis)',subTitle:'Abbonamento',start:'Inizia',paySoon:'Pagamento Stripe in arrivo — accesso attivato per ora.',advTitle:'Diventa inserzionista — 1 anno gratis',bizName:'Nome attività',bizDesc:'Breve descrizione',bizAddr:'Indirizzo',bizTel:'Telefono',bizWeb:'Sito web',bizImg:'Foto (URL)',publish:'Pubblica la mia scheda',advNote:'1 anno di accesso gratis + visibilità in Consigli e nel carosello. Max 4 per categoria e città.',selCat:'Categoria',selCity:'Città',working:'In corso…',badCreds:'Dati errati. Crea un account qui sotto.',fields:'Compila i campi richiesti.',limit:'Già 4 attività per questa categoria e città.',reconnect:'Account creato — accedi di nuovo.',tileOffres:'Offerte',tileVoyage:'Il mio viaggio',tripAdd:'＋ Il mio viaggio',tripEmpty:'Ancora nulla. Aggiungi luoghi ed eventi con ＋.',planDay:'Pianifica la giornata ✨',dayLabel:'Giorno',offersEmpty:'Ancora nessuna offerta.',bizOffer:'Offerta membri (es: -15%)',added:'✓ Aggiunto',notifBtn:'🔔 Attiva avvisi'},
+    de:{tag:'Quintana Roo · Yucatán',login:'Anmelden',signin:'Anmelden',email:'E-Mail',pass:'Passwort',passNew:'Passwort (6+)',newHere:'Neu hier?',subCta:'Abo 3$/Mon.',advCta:'Werbepartner werden (gratis)',subTitle:'Abo',start:'Starten',paySoon:'Stripe-Zahlung bald — Zugang vorerst aktiviert.',advTitle:'Werbepartner werden — 1 Jahr gratis',bizName:'Firmenname',bizDesc:'Kurze Beschreibung',bizAddr:'Adresse',bizTel:'Telefon',bizWeb:'Website',bizImg:'Foto (URL)',publish:'Eintrag veröffentlichen',advNote:'1 Jahr Gratiszugang + Sichtbarkeit in Empfehlungen und im Karussell. Max 4 pro Kategorie und Stadt.',selCat:'Kategorie',selCity:'Stadt',working:'Läuft…',badCreds:'Falsche Daten. Erstelle unten ein Konto.',fields:'Bitte Pflichtfelder ausfüllen.',limit:'Bereits 4 Firmen für diese Kategorie und Stadt.',reconnect:'Konto erstellt — bitte erneut anmelden.',tileOffres:'Angebote',tileVoyage:'Meine Reise',tripAdd:'＋ Meine Reise',tripEmpty:'Noch nichts. Füge Orte und Events mit ＋ hinzu.',planDay:'Tag planen ✨',dayLabel:'Tag',offersEmpty:'Noch keine Angebote.',bizOffer:'Mitglieder-Angebot (z.B. -15%)',added:'✓ Hinzugefügt',notifBtn:'🔔 Hinweise aktivieren'}
   };
   function at(k){return (AUTH_T[LANG]&&AUTH_T[LANG][k])||AUTH_T.es[k]||k;}
   function localizeAuth(){
@@ -859,7 +897,7 @@
     const {data}=await SB.from('profiles').select('sub_status,account_type').eq('id',user.id).maybeSingle();
     return !!(data&&(data.sub_status==='active'||data.account_type==='advertiser'));
   }
-  async function enterApp(){document.getElementById('authGate').style.display='none';try{await loadSponsors();}catch(e){}}
+  async function enterApp(){document.getElementById('authGate').style.display='none';try{await loadSponsors();await loadTrip();nearAlert(false);}catch(e){}}
 
   async function doLogin(){
     if(!SB){enterApp();return;}
@@ -898,7 +936,7 @@
     let lat=null,lng=null;
     try{const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:6000}));lat=pos.coords.latitude;lng=pos.coords.longitude;}catch(e){}
     const region=(CITY[city]&&CITY[city].r)||'';
-    const rec={owner:user.id,name,category:cat,city,region,description:g('ad-desc'),website:g('ad-web'),facebook:g('ad-fb'),instagram:g('ad-ig'),phone:g('ad-tel'),address:g('ad-addr'),lat,lng,image_url:g('ad-img')};
+    const rec={owner:user.id,name,category:cat,city,region,description:g('ad-desc'),website:g('ad-web'),facebook:g('ad-fb'),instagram:g('ad-ig'),phone:g('ad-tel'),address:g('ad-addr'),lat,lng,image_url:g('ad-img'),offer:g('ad-offer')};
     const ins=await SB.from('advertisers').insert(rec);
     if(ins.error){ if(/LIMIT12|limit/i.test(ins.error.message))aMsg('ad-msg','limit'); else aMsg('ad-msg',ins.error.message||'fields'); return; }
     await SB.from('profiles').update({account_type:'advertiser',sub_status:'active'}).eq('id',user.id);
@@ -911,8 +949,8 @@
   async function loadSponsors(){
     if(!SB){SPONSORS=[];return;}
     const {data,error}=await SB.from('advertisers').select('*');
-    SPONSORS=(!error&&data)?data.map(a=>({n:a.name,c:a.category,city:a.city,region:a.region||'',d:a.description||'',website:a.website||'',facebook:a.facebook||'',instagram:a.instagram||'',phone:a.phone||'',address:a.address||'',lat:a.lat,lng:a.lng,img:a.image_url||'',sponsor:true})):[];
-    buildCarousel();renderNews();
+    SPONSORS=(!error&&data)?data.map(a=>({n:a.name,c:a.category,city:a.city,region:a.region||'',d:a.description||'',website:a.website||'',facebook:a.facebook||'',instagram:a.instagram||'',phone:a.phone||'',address:a.address||'',lat:a.lat,lng:a.lng,img:a.image_url||'',offer:a.offer||'',sponsor:true})):[];
+    buildCarousel();renderNews();renderOffers();
   }
   function openSponsor(i){
     const p=SPONSORS[i];if(!p)return;const v=vis(p.c);
@@ -923,9 +961,51 @@
     const fb=p.facebook?`<a href="${p.facebook}" target="_blank" rel="noopener">📘 Facebook</a>`:'';
     const ig=p.instagram?`<a href="${p.instagram}" target="_blank" rel="noopener">📷 Instagram</a>`:'';
     const addr=p.address?`<br><span style="color:var(--muted)">📍 ${p.address}</span>`:'';
-    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${v.grad}"><div class="wm">${svg(v.icon)}</div>${coverImg(p.img)}<span class="hchip">★ ${tcat(p.c)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${p.n}</h2><div class="m2"><span>📍 ${p.city}</span></div><p class="desc">${p.d||''}${addr}</p><div class="social">${gmaps}${web}${tel}${fb}${ig}</div></div>`;
+    const offer=p.offer?`<div class="srcbar" style="background:var(--midbg,#faf0da);color:var(--gold-d);border-color:var(--gold-l)"><span class="d" style="background:var(--gold)"></span> ★ ${p.offer}</div>`:'';
+    document.getElementById('sheet').innerHTML=`<div class="hero" style="background:${v.grad}"><div class="wm">${svg(v.icon)}</div>${coverImg(p.img)}<span class="hchip">★ ${tcat(p.c)}</span><button class="close" onclick="closeModal()">✕</button></div><div class="sc"><h2>${p.n}</h2><div class="m2"><span>📍 ${p.city}</span></div>${offer}<p class="desc">${p.d||''}${addr}</p><div class="social"><a onclick="addTripFromSponsor(${i})">${at('tripAdd')}</a>${gmaps}${web}${tel}${fb}${ig}</div></div>`;
     document.getElementById('modal').classList.add('show');
   }
+  /* ================= ENGAGEMENT : offres · voyage · plan · alertes ================= */
+  let TRIP=[], CUROBJ=null, sessionAlerted=false;
+  function toast(msg){let el=document.getElementById('__toast');if(!el){el=document.createElement('div');el.id='__toast';el.className='toast';(document.querySelector('.screen')||document.body).appendChild(el);}el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800);}
+
+  async function loadTrip(){if(!SB){TRIP=[];return;}try{const {data,error}=await SB.from('trip_items').select('*').order('day',{ascending:true});TRIP=(!error&&data)?data:[];}catch(e){TRIP=[];}renderTrip();}
+  async function addTrip(rec,day){if(!SB){toast('—');return;}const {data:{user}}=await SB.auth.getUser();if(!user)return;const d=day||1;const ins=await SB.from('trip_items').insert({owner:user.id,day:d,kind:rec.kind,name:rec.name,category:rec.category||'',city:rec.city||'',lat:rec.lat,lng:rec.lng});if(!ins.error){toast(at('added'));await loadTrip();}}
+  function addTripFromPlace(i){const p=PLACES[i];if(p)addTrip({kind:'place',name:p.n,category:p.c,city:p.city,lat:p.lat,lng:p.lng});}
+  function addTripFromSponsor(i){const p=SPONSORS[i];if(p)addTrip({kind:'sponsor',name:p.n,category:p.c,city:p.city,lat:p.lat,lng:p.lng});}
+  function addTripFromObj(){if(CUROBJ)addTrip({kind:'event',name:CUROBJ.title,category:CUROBJ.category,city:CUROBJ.location,lat:null,lng:null});}
+  async function removeTrip(id){if(!SB)return;await SB.from('trip_items').delete().eq('id',id);await loadTrip();}
+  async function addTripBatch(items,day){if(!SB)return;const {data:{user}}=await SB.auth.getUser();if(!user)return;const rows=items.map(it=>({owner:user.id,day:day,kind:it.kind,name:it.name,category:it.category||'',city:it.city||'',lat:it.lat,lng:it.lng}));const ins=await SB.from('trip_items').insert(rows);if(!ins.error){toast(at('added'));await loadTrip();showView('trip');}}
+  function renderTrip(){
+    const host=document.getElementById('tripList');if(!host)return;
+    if(!TRIP.length){host.innerHTML=`<div class="empty">${at('tripEmpty')}</div>`;return;}
+    const days=[...new Set(TRIP.map(x=>x.day))].sort((a,b)=>a-b);
+    host.innerHTML=days.map(d=>{
+      const items=TRIP.filter(x=>x.day===d).map(x=>{const v=vis(x.category||'Actividades');return `<div class="tripitem"><div class="ti-ic" style="background:${v.grad}">${svg(v.icon)}</div><div class="ti-b"><h4>${x.name}</h4><div class="ti-s">${x.category?tcat(x.category):''}${x.city?' · '+x.city:''}</div></div><span class="ti-x" onclick="removeTrip('${x.id}')">✕</span></div>`;}).join('');
+      return `<div class="tripday"><div class="td-h">${at('dayLabel')} ${d}</div>${items}</div>`;
+    }).join('');
+  }
+  function planDay(){
+    const dist=it=>(USERLOC&&it.lat&&it.lng)?distKm(USERLOC.lat,USERLOC.lng,it.lat,it.lng):9999;
+    const pick=(cats,used)=>{let pool=[];SPONSORS.forEach(s=>{if(cats.indexOf(s.c)>=0)pool.push({kind:'sponsor',name:s.n,category:s.c,city:s.city,lat:s.lat,lng:s.lng,_s:1});});PLACES.forEach(p=>{if(cats.indexOf(p.c)>=0)pool.push({kind:'place',name:p.n,category:p.c,city:p.city,lat:p.lat,lng:p.lng,_s:0});});pool=pool.filter(x=>!used.has(x.name));pool.sort((a,b)=>(b._s-a._s)||(dist(a)-dist(b)));return pool[0];};
+    const slots=[['Playas','Actividades'],['Restaurantes'],['Actividades','Compras'],['Bares']];
+    const chosen=[],used=new Set();
+    slots.forEach(cats=>{const it=pick(cats,used);if(it){used.add(it.name);chosen.push(it);}});
+    if(EVENTS.length){const e=EVENTS[0];chosen.push({kind:'event',name:e.title,category:e.category,city:e.location,lat:null,lng:null});}
+    if(!chosen.length){toast('—');return;}
+    const day=(TRIP.length?Math.max(...TRIP.map(x=>x.day)):0)+1;
+    addTripBatch(chosen,day);
+  }
+  function renderOffers(){
+    const host=document.getElementById('offersList');if(!host)return;
+    let list=SPONSORS.filter(s=>s.offer&&s.offer.trim());
+    if(USERLOC)list.sort((a,b)=>sponsorDist(a)-sponsorDist(b));
+    if(!list.length){host.innerHTML=`<div class="empty">${at('offersEmpty')}</div>`;return;}
+    host.innerHTML=list.map(s=>{const idx=SPONSORS.indexOf(s),v=vis(s.c);return `<div class="offer" onclick="openSponsor(${idx})"><div class="of-ic" style="background:${v.grad}">${svg(v.icon)}</div><div class="of-b"><span class="of-tag">★ ${s.offer}</span><h4>${s.n}</h4><div class="of-s">${tcat(s.c)} · ${s.city}</div></div></div>`;}).join('');
+  }
+  async function enableNotifs(){if(!('Notification'in window)){toast('—');return;}let p=Notification.permission;if(p!=='granted')p=await Notification.requestPermission();if(p==='granted')nearAlert(true);}
+  function nearAlert(force){if(!('Notification'in window)||Notification.permission!=='granted')return;if(!force&&sessionAlerted)return;sessionAlerted=true;const near=SPONSORS.filter(s=>s.offer&&(!USERLOC||sponsorDist(s)<=40));if(near.length){try{new Notification('App Mexico',{body:near.length+' '+at('tileOffres')+(near[0].city?' · '+near[0].city:''),icon:'icon-192.png'});}catch(e){}}}
+
   async function initAuth(){
     if(!SB){document.getElementById('authGate').style.display='none';return;}
     showPane('login');

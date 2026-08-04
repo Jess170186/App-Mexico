@@ -1,0 +1,31 @@
+name: Mettre à jour les événements
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+      - name: Générer events.json
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python aggregator.py
+      - name: Publier events.json si modifié
+        run: |
+          git config user.name  "app-mexico-bot"
+          git config user.email "bot@appmexico.local"
+          git add events.json
+          git commit -m "chore: mise à jour automatique des événements" || echo "Aucun changement"
+          git push

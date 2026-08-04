@@ -25,7 +25,7 @@
   .screen{width:100%;height:100%;background:var(--cream);border-radius:40px;overflow:hidden;position:relative;display:flex;flex-direction:column}
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:132px;height:28px;background:#0c0c0d;border-radius:0 0 18px 18px;z-index:60}
   .statusbar{height:42px;display:flex;align-items:center;justify-content:space-between;padding:0 24px 0 28px;font-size:12.5px;font-weight:600;color:var(--ink);flex:none;z-index:20}
-  .appbar{padding:2px 20px 8px;text-align:center;flex:none}
+  .appbar{padding:2px 20px 8px;text-align:center;flex:none;position:relative}
   .appbar .wm{font-family:"Snell Roundhand","Segoe Script","Brush Script MT",cursive;font-size:30px;color:var(--teal2);line-height:1}
   .flags{display:inline-flex;align-items:center;gap:2px;margin-top:8px;background:#fff;border:1px solid var(--line);padding:4px 10px;border-radius:20px;font-size:15px;box-shadow:0 2px 6px rgba(0,0,0,.05);position:relative}
   .flags::before,.flags::after{content:"";position:absolute;top:50%;width:9px;height:9px;background:#fff;border:1px solid var(--line);transform:translateY(-50%) rotate(45deg)}
@@ -39,6 +39,12 @@
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .caps{text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-d);font-weight:700;margin:8px 0 12px}
   .caps small{font-size:8px;color:var(--muted);letter-spacing:1px}
+  .backbtn{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);color:var(--teal2);font-size:12px;font-weight:700;padding:7px 13px;border-radius:20px;cursor:pointer;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+  .backbtn:active{background:var(--ivory)}
+  .searchBtn{position:absolute;right:16px;top:4px;width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid var(--line);color:var(--teal2);font-size:15px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;z-index:3}
+  .searchBtn:active{background:var(--ivory)}
+  .searchField{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--line);border-radius:14px;font-size:14px;color:var(--ink);background:#fff;margin-bottom:12px;outline:none}
+  .searchField:focus{border-color:var(--teal)}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .tile{background:var(--ivory);border:1px solid var(--line);border-radius:16px;padding:12px 6px 9px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:.15s;box-shadow:0 3px 8px rgba(20,42,43,.05)}
   .tile:active{transform:scale(.95)}
@@ -158,6 +164,7 @@
       <div class="notch"></div>
       <div class="statusbar"><span>9:41</span><span>📶 &nbsp;🔋</span></div>
       <div class="appbar">
+        <button class="searchBtn" onclick="openSearch()" aria-label="search">🔍</button>
         <div class="flags" id="flags">
           <span class="flag on" data-l="es" onclick="setLang('es')">🇪🇸</span>
           <span class="flag" data-l="en" onclick="setLang('en')">🇺🇸</span>
@@ -181,6 +188,7 @@
         </div>
 
         <div class="view" id="v-news">
+          <button class="backbtn" onclick="showView('home')">←&nbsp;<span data-i18n="back">Retour</span></button>
           <div class="caps" data-i18n="caps_news">Novedades</div>
           <div class="news spon" onclick="openEvent()"><span class="spon-badge">★ <span data-i18n="sponsored">PATROCINADO</span></span>
             <div class="img" style="background:linear-gradient(140deg,#c7a24c,#9c7a2e)"><div class="wm">__ICON_star__</div><img class="cover" src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&q=70" loading="lazy" onerror="this.remove()"></div>
@@ -190,6 +198,7 @@
         </div>
 
         <div class="view" id="v-list">
+          <button class="backbtn" onclick="showView('home')">←&nbsp;<span data-i18n="back">Retour</span></button>
           <div class="caps" id="listTitle">Restaurantes</div>
           <div class="filterbar" id="listFilter"></div>
           <div id="listItems"></div>
@@ -210,6 +219,7 @@
         </div>
 
         <div class="view" id="v-plans">
+          <button class="backbtn" onclick="showView('home')">←&nbsp;<span data-i18n="back">Retour</span></button>
           <div class="caps" data-i18n="caps_plans">Suscripción</div>
           <div class="panel"><div class="price">$3<small>/<span data-i18n="month">mes</span></small></div>
             <p style="text-align:center;font-size:11.5px;color:var(--muted);margin-top:4px" data-i18n="plan_sub">o $30/año — 2 meses gratis</p>
@@ -221,6 +231,13 @@
           <h2 class="sec" style="margin-top:20px" data-i18n="for_sponsors">Para patrocinadores</h2>
           <div class="tier"><h4><span data-i18n="tier1">Presencia</span> <span class="amt">$490/<span data-i18n="year">año</span></span></h4><ul><li data-i18n="t1a">Ficha destacada en su categoría</li><li data-i18n="t1b">Enlace a sus redes sociales</li></ul></div>
           <div class="tier best"><span class="ribbon" data-i18n="popular">MÁS POPULAR</span><h4><span data-i18n="tier2">Prioridad</span> <span class="amt">$1 290/<span data-i18n="year">año</span></span></h4><ul><li data-i18n="t2a">1er lugar en categoría y recomendaciones</li><li data-i18n="t2b">Publicar novedades y promos</li><li data-i18n="t2c">Banner en portada + estadísticas</li></ul></div>
+        </div>
+
+        <div class="view" id="v-search">
+          <button class="backbtn" onclick="showView('home')">←&nbsp;<span data-i18n="back">Retour</span></button>
+          <input class="searchField" id="searchInput" oninput="runSearch()" data-i18n-ph="search_ph" placeholder="Buscar…">
+          <div class="caps" id="searchCount"></div>
+          <div id="searchResults"></div>
         </div>
       </div>
 
@@ -267,11 +284,11 @@
 
   /* ---------- i18n ---------- */
   const T={
-    es:{caps_home:'Descubre México',auto_t:'Actualización automática',auto_s:'La app publica los eventos sola, en las 2 regiones.',caps_agenda:'Agenda de eventos',caps_news:'Novedades',caps_plans:'Suscripción',sponsored:'PATROCINADO',month:'mes',plan_sub:'o $30/año — 2 meses gratis',f1:'Agenda completa sin anuncios',f2:'Favoritos y recomendaciones a tu medida',f3:'Descuentos exclusivos de patrocinadores',cta_trial:'Prueba gratis de 7 días',for_sponsors:'Para patrocinadores',tier1:'Presencia',tier2:'Prioridad',year:'año',popular:'MÁS POPULAR',t1a:'Ficha destacada en su categoría',t1b:'Enlace a sus redes sociales',t2a:'1er lugar en categoría y recomendaciones',t2b:'Publicar novedades y promos',t2c:'Banner en portada + estadísticas',tab_home:'Inicio',tab_agenda:'Agenda',tab_news:'Novedades',tab_plans:'Planes',src_auto:'Publicado automáticamente',src_spon:'Contenido del patrocinador',btn_src:'Ver fuente',btn_ig:'Instagram',btn_share:'Compartir',btn_add:'Agregar a mi agenda',fav_title:'Mis favoritos',fav_short:'Favoritos',fav_empty:'Aún no tienes favoritos.\\nToca el ♥ en cualquier lugar para guardarlo aquí.',all_regions:'Todo',all_cities:'Todas',map_title:'Mapa',eventos:'Eventos',novedades:'Novedades',fav_add:'♥ Guardar',fav_remove:'♥ Quitar',see_map:'Ver en el mapa',results:'lugares',cats:['Restaurantes','Actividades','Playas','Transporte','Bares','Compras','WiFi']},
-    en:{caps_home:'Discover Mexico',auto_t:'Automatic updates',auto_s:'The app posts events on its own, across both regions.',caps_agenda:'Events agenda',caps_news:'What’s new',caps_plans:'Subscription',sponsored:'SPONSORED',month:'mo',plan_sub:'or $30/year — 2 months free',f1:'Full agenda, ad-free',f2:'Favorites and tailored picks',f3:'Exclusive sponsor deals',cta_trial:'Start 7-day free trial',for_sponsors:'For sponsors',tier1:'Presence',tier2:'Priority',year:'yr',popular:'MOST POPULAR',t1a:'Featured listing in your category',t1b:'Link to your social networks',t2a:'Top spot in category and picks',t2b:'Publish news and promos',t2c:'Home banner + analytics',tab_home:'Home',tab_agenda:'Agenda',tab_news:'News',tab_plans:'Plans',src_auto:'Auto-published',src_spon:'Sponsor content',btn_src:'View source',btn_ig:'Instagram',btn_share:'Share',btn_add:'Add to my agenda',fav_title:'My favorites',fav_short:'Favorites',fav_empty:'No favorites yet.\\nTap the ♥ on any place to save it here.',all_regions:'All',all_cities:'All cities',map_title:'Map',eventos:'Events',novedades:'News',fav_add:'♥ Save',fav_remove:'♥ Remove',see_map:'See on map',results:'places',cats:['Restaurants','Activities','Beaches','Transport','Bars','Shopping','Free WiFi']},
-    fr:{caps_home:'Découvre le Mexique',auto_t:'Mise à jour automatique',auto_s:'L’app publie les événements toute seule, dans les 2 régions.',caps_agenda:'Agenda des événements',caps_news:'Nouveautés',caps_plans:'Abonnement',sponsored:'SPONSORISÉ',month:'mois',plan_sub:'ou 30 $/an — 2 mois offerts',f1:'Agenda complet sans publicité',f2:'Favoris et recommandations sur mesure',f3:'Réductions exclusives des commanditaires',cta_trial:'Essai gratuit de 7 jours',for_sponsors:'Pour les commanditaires',tier1:'Présence',tier2:'Priorité',year:'an',popular:'LE PLUS POPULAIRE',t1a:'Fiche mise en avant dans ta catégorie',t1b:'Lien vers tes réseaux sociaux',t2a:'1re place en catégorie et recommandations',t2b:'Publier nouveautés et promos',t2c:'Bannière en accueil + statistiques',tab_home:'Accueil',tab_agenda:'Agenda',tab_news:'Actus',tab_plans:'Offres',src_auto:'Publié automatiquement',src_spon:'Contenu du commanditaire',btn_src:'Voir la source',btn_ig:'Instagram',btn_share:'Partager',btn_add:'Ajouter à mon agenda',fav_title:'Mes favoris',fav_short:'Favoris',fav_empty:'Aucun favori pour l’instant.\\nAppuie sur le ♥ d’un lieu pour l’enregistrer ici.',all_regions:'Tout',all_cities:'Toutes',map_title:'Carte',eventos:'Événements',novedades:'Actus',fav_add:'♥ Enregistrer',fav_remove:'♥ Retirer',see_map:'Voir sur la carte',results:'lieux',cats:['Restaurants','Activités','Plages','Transport','Bars','Shopping','WiFi gratuit']},
-    it:{caps_home:'Scopri il Messico',auto_t:'Aggiornamento automatico',auto_s:'L’app pubblica gli eventi da sola, nelle 2 regioni.',caps_agenda:'Agenda eventi',caps_news:'Novità',caps_plans:'Abbonamento',sponsored:'SPONSORIZZATO',month:'mese',plan_sub:'o 30 $/anno — 2 mesi gratis',f1:'Agenda completa senza pubblicità',f2:'Preferiti e consigli su misura',f3:'Sconti esclusivi degli sponsor',cta_trial:'Prova gratis di 7 giorni',for_sponsors:'Per gli sponsor',tier1:'Presenza',tier2:'Priorità',year:'anno',popular:'PIÙ POPOLARE',t1a:'Scheda in evidenza nella tua categoria',t1b:'Link ai tuoi social',t2a:'Primo posto in categoria e consigli',t2b:'Pubblica novità e promo',t2c:'Banner in home + statistiche',tab_home:'Home',tab_agenda:'Agenda',tab_news:'Novità',tab_plans:'Piani',src_auto:'Pubblicato automaticamente',src_spon:'Contenuto dello sponsor',btn_src:'Vedi fonte',btn_ig:'Instagram',btn_share:'Condividi',btn_add:'Aggiungi alla mia agenda',fav_title:'I miei preferiti',fav_short:'Preferiti',fav_empty:'Ancora nessun preferito.\\nTocca il ♥ su un luogo per salvarlo qui.',all_regions:'Tutto',all_cities:'Tutte',map_title:'Mappa',eventos:'Eventi',novedades:'Novità',fav_add:'♥ Salva',fav_remove:'♥ Rimuovi',see_map:'Vedi sulla mappa',results:'luoghi',cats:['Ristoranti','Attività','Spiagge','Trasporti','Bar','Shopping','WiFi gratis']},
-    de:{caps_home:'Entdecke Mexiko',auto_t:'Automatische Updates',auto_s:'Die App veröffentlicht Events automatisch in beiden Regionen.',caps_agenda:'Veranstaltungen',caps_news:'Neuigkeiten',caps_plans:'Abo',sponsored:'GESPONSERT',month:'Mon.',plan_sub:'oder 30 $/Jahr — 2 Monate gratis',f1:'Voller Kalender, werbefrei',f2:'Favoriten und passende Empfehlungen',f3:'Exklusive Sponsoren-Rabatte',cta_trial:'7 Tage gratis testen',for_sponsors:'Für Sponsoren',tier1:'Präsenz',tier2:'Priorität',year:'Jahr',popular:'AM BELIEBTESTEN',t1a:'Hervorgehobener Eintrag in deiner Kategorie',t1b:'Link zu deinen sozialen Netzwerken',t2a:'Erster Platz in Kategorie und Empfehlungen',t2b:'Neuigkeiten und Aktionen posten',t2c:'Startseiten-Banner + Statistiken',tab_home:'Start',tab_agenda:'Agenda',tab_news:'News',tab_plans:'Tarife',src_auto:'Automatisch veröffentlicht',src_spon:'Sponsoren-Inhalt',btn_src:'Quelle ansehen',btn_ig:'Instagram',btn_share:'Teilen',btn_add:'Zu meiner Agenda',fav_title:'Meine Favoriten',fav_short:'Favoriten',fav_empty:'Noch keine Favoriten.\\nTippe auf das ♥ eines Ortes, um ihn hier zu speichern.',all_regions:'Alle',all_cities:'Alle Städte',map_title:'Karte',eventos:'Events',novedades:'News',fav_add:'♥ Speichern',fav_remove:'♥ Entfernen',see_map:'Auf der Karte',results:'Orte',cats:['Restaurants','Aktivitäten','Strände','Transport','Bars','Shopping','Gratis-WLAN']}
+    es:{caps_home:'Descubre México',auto_t:'Actualización automática',auto_s:'La app publica los eventos sola, en las 2 regiones.',caps_agenda:'Agenda de eventos',caps_news:'Novedades',caps_plans:'Suscripción',sponsored:'PATROCINADO',month:'mes',plan_sub:'o $30/año — 2 meses gratis',f1:'Agenda completa sin anuncios',f2:'Favoritos y recomendaciones a tu medida',f3:'Descuentos exclusivos de patrocinadores',cta_trial:'Prueba gratis de 7 días',for_sponsors:'Para patrocinadores',tier1:'Presencia',tier2:'Prioridad',year:'año',popular:'MÁS POPULAR',t1a:'Ficha destacada en su categoría',t1b:'Enlace a sus redes sociales',t2a:'1er lugar en categoría y recomendaciones',t2b:'Publicar novedades y promos',t2c:'Banner en portada + estadísticas',tab_home:'Inicio',tab_agenda:'Agenda',tab_news:'Novedades',tab_plans:'Planes',src_auto:'Publicado automáticamente',src_spon:'Contenido del patrocinador',btn_src:'Ver fuente',btn_ig:'Instagram',btn_share:'Compartir',btn_add:'Agregar a mi agenda',fav_title:'Mis favoritos',fav_short:'Favoritos',fav_empty:'Aún no tienes favoritos.\\nToca el ♥ en cualquier lugar para guardarlo aquí.',all_regions:'Todo',all_cities:'Todas',map_title:'Mapa',eventos:'Eventos',novedades:'Novedades',fav_add:'♥ Guardar',fav_remove:'♥ Quitar',see_map:'Ver en el mapa',results:'lugares',back:'Volver',search_ph:'Buscar un lugar, ciudad o categoría…',cats:['Restaurantes','Actividades','Playas','Transporte','Bares','Compras','WiFi']},
+    en:{caps_home:'Discover Mexico',auto_t:'Automatic updates',auto_s:'The app posts events on its own, across both regions.',caps_agenda:'Events agenda',caps_news:'What’s new',caps_plans:'Subscription',sponsored:'SPONSORED',month:'mo',plan_sub:'or $30/year — 2 months free',f1:'Full agenda, ad-free',f2:'Favorites and tailored picks',f3:'Exclusive sponsor deals',cta_trial:'Start 7-day free trial',for_sponsors:'For sponsors',tier1:'Presence',tier2:'Priority',year:'yr',popular:'MOST POPULAR',t1a:'Featured listing in your category',t1b:'Link to your social networks',t2a:'Top spot in category and picks',t2b:'Publish news and promos',t2c:'Home banner + analytics',tab_home:'Home',tab_agenda:'Agenda',tab_news:'News',tab_plans:'Plans',src_auto:'Auto-published',src_spon:'Sponsor content',btn_src:'View source',btn_ig:'Instagram',btn_share:'Share',btn_add:'Add to my agenda',fav_title:'My favorites',fav_short:'Favorites',fav_empty:'No favorites yet.\\nTap the ♥ on any place to save it here.',all_regions:'All',all_cities:'All cities',map_title:'Map',eventos:'Events',novedades:'News',fav_add:'♥ Save',fav_remove:'♥ Remove',see_map:'See on map',results:'places',back:'Back',search_ph:'Search a place, city or category…',cats:['Restaurants','Activities','Beaches','Transport','Bars','Shopping','Free WiFi']},
+    fr:{caps_home:'Découvre le Mexique',auto_t:'Mise à jour automatique',auto_s:'L’app publie les événements toute seule, dans les 2 régions.',caps_agenda:'Agenda des événements',caps_news:'Nouveautés',caps_plans:'Abonnement',sponsored:'SPONSORISÉ',month:'mois',plan_sub:'ou 30 $/an — 2 mois offerts',f1:'Agenda complet sans publicité',f2:'Favoris et recommandations sur mesure',f3:'Réductions exclusives des commanditaires',cta_trial:'Essai gratuit de 7 jours',for_sponsors:'Pour les commanditaires',tier1:'Présence',tier2:'Priorité',year:'an',popular:'LE PLUS POPULAIRE',t1a:'Fiche mise en avant dans ta catégorie',t1b:'Lien vers tes réseaux sociaux',t2a:'1re place en catégorie et recommandations',t2b:'Publier nouveautés et promos',t2c:'Bannière en accueil + statistiques',tab_home:'Accueil',tab_agenda:'Agenda',tab_news:'Actus',tab_plans:'Offres',src_auto:'Publié automatiquement',src_spon:'Contenu du commanditaire',btn_src:'Voir la source',btn_ig:'Instagram',btn_share:'Partager',btn_add:'Ajouter à mon agenda',fav_title:'Mes favoris',fav_short:'Favoris',fav_empty:'Aucun favori pour l’instant.\\nAppuie sur le ♥ d’un lieu pour l’enregistrer ici.',all_regions:'Tout',all_cities:'Toutes',map_title:'Carte',eventos:'Événements',novedades:'Actus',fav_add:'♥ Enregistrer',fav_remove:'♥ Retirer',see_map:'Voir sur la carte',results:'lieux',back:'Retour',search_ph:'Rechercher un lieu, une ville, une catégorie…',cats:['Restaurants','Activités','Plages','Transport','Bars','Shopping','WiFi gratuit']},
+    it:{caps_home:'Scopri il Messico',auto_t:'Aggiornamento automatico',auto_s:'L’app pubblica gli eventi da sola, nelle 2 regioni.',caps_agenda:'Agenda eventi',caps_news:'Novità',caps_plans:'Abbonamento',sponsored:'SPONSORIZZATO',month:'mese',plan_sub:'o 30 $/anno — 2 mesi gratis',f1:'Agenda completa senza pubblicità',f2:'Preferiti e consigli su misura',f3:'Sconti esclusivi degli sponsor',cta_trial:'Prova gratis di 7 giorni',for_sponsors:'Per gli sponsor',tier1:'Presenza',tier2:'Priorità',year:'anno',popular:'PIÙ POPOLARE',t1a:'Scheda in evidenza nella tua categoria',t1b:'Link ai tuoi social',t2a:'Primo posto in categoria e consigli',t2b:'Pubblica novità e promo',t2c:'Banner in home + statistiche',tab_home:'Home',tab_agenda:'Agenda',tab_news:'Novità',tab_plans:'Piani',src_auto:'Pubblicato automaticamente',src_spon:'Contenuto dello sponsor',btn_src:'Vedi fonte',btn_ig:'Instagram',btn_share:'Condividi',btn_add:'Aggiungi alla mia agenda',fav_title:'I miei preferiti',fav_short:'Preferiti',fav_empty:'Ancora nessun preferito.\\nTocca il ♥ su un luogo per salvarlo qui.',all_regions:'Tutto',all_cities:'Tutte',map_title:'Mappa',eventos:'Eventi',novedades:'Novità',fav_add:'♥ Salva',fav_remove:'♥ Rimuovi',see_map:'Vedi sulla mappa',results:'luoghi',back:'Indietro',search_ph:'Cerca un luogo, città o categoria…',cats:['Ristoranti','Attività','Spiagge','Trasporti','Bar','Shopping','WiFi gratis']},
+    de:{caps_home:'Entdecke Mexiko',auto_t:'Automatische Updates',auto_s:'Die App veröffentlicht Events automatisch in beiden Regionen.',caps_agenda:'Veranstaltungen',caps_news:'Neuigkeiten',caps_plans:'Abo',sponsored:'GESPONSERT',month:'Mon.',plan_sub:'oder 30 $/Jahr — 2 Monate gratis',f1:'Voller Kalender, werbefrei',f2:'Favoriten und passende Empfehlungen',f3:'Exklusive Sponsoren-Rabatte',cta_trial:'7 Tage gratis testen',for_sponsors:'Für Sponsoren',tier1:'Präsenz',tier2:'Priorität',year:'Jahr',popular:'AM BELIEBTESTEN',t1a:'Hervorgehobener Eintrag in deiner Kategorie',t1b:'Link zu deinen sozialen Netzwerken',t2a:'Erster Platz in Kategorie und Empfehlungen',t2b:'Neuigkeiten und Aktionen posten',t2c:'Startseiten-Banner + Statistiken',tab_home:'Start',tab_agenda:'Agenda',tab_news:'News',tab_plans:'Tarife',src_auto:'Automatisch veröffentlicht',src_spon:'Sponsoren-Inhalt',btn_src:'Quelle ansehen',btn_ig:'Instagram',btn_share:'Teilen',btn_add:'Zu meiner Agenda',fav_title:'Meine Favoriten',fav_short:'Favoriten',fav_empty:'Noch keine Favoriten.\\nTippe auf das ♥ eines Ortes, um ihn hier zu speichern.',all_regions:'Alle',all_cities:'Alle Städte',map_title:'Karte',eventos:'Events',novedades:'News',fav_add:'♥ Speichern',fav_remove:'♥ Entfernen',see_map:'Auf der Karte',results:'Orte',back:'Zurück',search_ph:'Ort, Stadt oder Kategorie suchen…',cats:['Restaurants','Aktivitäten','Strände','Transport','Bars','Shopping','Gratis-WLAN']}
   };
   const EVCAT={'Música':{en:'Music',fr:'Musique',it:'Musica',de:'Musik'},'Gastronomía':{en:'Food',fr:'Gastronomie',it:'Gastronomia',de:'Gastronomie'},'Cultura':{en:'Culture',fr:'Culture',it:'Cultura',de:'Kultur'},'Fiesta':{en:'Party',fr:'Fête',it:'Festa',de:'Party'},'Deporte':{en:'Sport',fr:'Sport',it:'Sport',de:'Sport'},'Arte':{en:'Art',fr:'Art',it:'Arte',de:'Kunst'},'Patrocinado':{en:'Sponsored',fr:'Sponsorisé',it:'Sponsorizzato',de:'Gesponsert'}};
   const PC=['Restaurantes','Actividades','Playas','Transporte','Bares','Compras','WiFi']; // ordre = cats
@@ -282,6 +299,7 @@
   function setLang(l){LANG=l;document.documentElement.lang=l;applyLang();}
   function applyLang(){
     document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.dataset.i18n);});
+    document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=t(el.dataset.i18nPh);});
     document.querySelectorAll('.flag').forEach(f=>f.classList.toggle('on',f.dataset.l===LANG));
     buildGrid();buildCarousel();renderAgenda();renderNews();renderActive();
   }
@@ -638,7 +656,19 @@
   document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
 
   /* ---------- Navigation ---------- */
-  const views={home:'v-home',agenda:'v-agenda',news:'v-news',list:'v-list',fav:'v-fav',map:'v-map',plans:'v-plans'};
+  const views={home:'v-home',agenda:'v-agenda',news:'v-news',list:'v-list',fav:'v-fav',map:'v-map',plans:'v-plans',search:'v-search'};
+  function openSearch(){ACTIVE='';showView('search');const inp=document.getElementById('searchInput');inp.placeholder=t('search_ph');inp.value='';document.getElementById('searchCount').textContent='';document.getElementById('searchResults').innerHTML='';setTimeout(()=>inp.focus(),60);}
+  function runSearch(){
+    const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
+    const res=document.getElementById('searchResults'),cnt=document.getElementById('searchCount');
+    if(q.length<2){res.innerHTML='';cnt.textContent='';return;}
+    const nz=s=>(s||'').toString().toLowerCase();
+    let items=PLACES.map((p,i)=>[p,i]).filter(([p])=>nz(p.n).includes(q)||nz(p.city).includes(q)||nz(p.c).includes(q)||nz(tcat(p.c)).includes(q)||nz(p.d).includes(q));
+    if(USERLOC)items.sort((a,b)=>pd(a[1])-pd(b[1]));
+    const total=items.length;items=items.slice(0,60);
+    cnt.textContent=total+' '+t('results');
+    res.innerHTML=total?items.map(([p,i])=>placeCard(p,i)).join(''):`<div class="empty">—</div>`;
+  }
   function showView(v){
     Object.values(views).forEach(id=>document.getElementById(id).classList.remove('active'));
     document.getElementById(views[v]).classList.add('active');

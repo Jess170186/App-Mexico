@@ -104,6 +104,14 @@
   .ti-x{color:var(--muted);cursor:pointer;font-size:15px;padding:4px 6px;flex:none}
   .of-tag{display:inline-block;background:var(--gold);color:#3a2e0e;font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px}
   .paddr{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .offer.promo{text-decoration:none;color:var(--ink)}
+  .offer.promo .of-ic{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#3a2e0e}
+  .offer.promo .ofgo{margin-left:auto;color:var(--gold-d);font-weight:800;font-size:17px;flex:none}
+  .offer.feat{background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;color:#fff;padding:15px 13px}
+  .offer.feat h4{color:#fff;font-size:15px}
+  .offer.feat .of-s{color:var(--gold-l)}
+  .offer.feat .of-ic{background:rgba(255,255,255,.16);color:var(--gold-l)}
+  .offer.feat .ofgo{color:var(--gold-l)}
   .tripclear{display:inline-block;background:#fff;border:1px solid var(--line);color:#c0392b;font-size:12px;font-weight:700;padding:8px 14px;border-radius:20px;cursor:pointer;margin-bottom:12px}
   .tripclear:active{background:var(--ivory)}
   .toast{position:absolute;left:50%;bottom:88px;transform:translateX(-50%) translateY(10px);background:var(--deep);color:#fff;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:20px;opacity:0;transition:.25s;z-index:150;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25)}
@@ -438,6 +446,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
   const ICONS={bed:'<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>',
     home:'<path d="M4 11l8-7 8 7M6 10v10h5v-6h2v6h5V10"/>',
@@ -949,6 +958,28 @@
   const SUPA_KEY='sb_publishable_2QQZ0_QXvWnzQFC2GCf9ow_ZjCRHrkF';
   let SB=null; try{ if(window.supabase&&window.supabase.createClient) SB=window.supabase.createClient(SUPA_URL,SUPA_KEY); }catch(e){}
   let SPONSORS=[];
+  let XLSXOFFERS=[];
+  async function loadXlsxOffers(){
+    try{
+      const r=await fetch('offres.xlsx?v='+Date.now(),{cache:'no-store'});
+      if(!r.ok){XLSXOFFERS=[];renderOffers();return;}
+      const buf=await r.arrayBuffer();
+      const wb=XLSX.read(buf,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+      const g=(r,keys)=>{for(const k of keys){for(const kk in r){if(kk.trim().toLowerCase()===k)return (''+r[kk]).trim();}}return '';};
+      XLSXOFFERS=rows.map(r=>({
+        title:g(r,['titre','title','título','titolo','titel']),
+        desc:g(r,['description','descripción','descrizione','beschreibung']),
+        biz:g(r,['entreprise','empresa','business','azienda','unternehmen']),
+        city:g(r,['ville','ciudad','city','città','stadt']),
+        url:g(r,['lien','link','url','enlace']),
+        cat:g(r,['catégorie','categoria','category','kategorie']),
+        active:g(r,['actif','activo','active','attivo','aktiv'])
+      })).filter(o=>(o.title||o.desc)&&(o.active===''||/^(o|y|s|1|v|a|j)/i.test(o.active)));
+    }catch(e){XLSXOFFERS=[];}
+    renderOffers();
+  }
 
   const AUTH_T={
     es:{tag:'Quintana Roo · Yucatán',login:'Iniciar sesión',signin:'Entrar',email:'Correo',pass:'Contraseña',passNew:'Contraseña (6+)',newHere:'¿Nuevo por aquí?',subCta:'Suscribirse 3$/mes',advCta:'Ser anunciante (gratis)',subTitle:'Suscripción',start:'Empezar',paySoon:'Pago con Stripe muy pronto — acceso activado por ahora.',advTitle:'Ser anunciante — 1 año gratis',bizName:'Nombre del negocio',bizDesc:'Descripción corta',bizAddr:'Dirección',bizTel:'Teléfono',bizWeb:'Sitio web',bizImg:'Foto (URL)',publish:'Publicar mi ficha',advNote:'1 año de acceso gratis + visibilidad en Recomendaciones y el carrusel. Máx. 4 por categoría y ciudad.',selCat:'Categoría',selCity:'Ciudad',working:'Procesando…',badCreds:'Datos incorrectos. Crea una cuenta abajo.',fields:'Completa los campos obligatorios.',limit:'Ya hay 4 empresas para esta categoría y ciudad.',reconnect:'Cuenta creada — vuelve a iniciar sesión.',tileOffres:'Ofertas',tileVoyage:'Mi viaje',tripAdd:'＋ Mi viaje',tripEmpty:'Aún nada en tu viaje. Añade lugares y eventos con ＋.',planDay:'Planea mi día ✨',dayLabel:'Día',offersEmpty:'Todavía no hay ofertas.',bizOffer:'Oferta para miembros (ej: -15%)',added:'✓ Añadido a tu viaje',notifBtn:'🔔 Activar alertas',bookAct:'Actividades',bookHotel:'Hoteles',tileGuides:'Guías',g1:'Top playas',g2:'Mejores restaurantes',g3:'Vida nocturna',g4:'Cenotes y actividades',g5:'Tulum en 2 días',g6:'Cancún esencial',clearTrip:'Vaciar mi viaje',cleared:'✓ Viaje vaciado',ongoing:'En curso',addWhichDay:'¿Añadir a qué día?',newDay:'Nuevo día',cancelBtn:'Cancelar'},
@@ -977,7 +1008,7 @@
     const {data}=await SB.from('profiles').select('sub_status,account_type').eq('id',user.id).maybeSingle();
     return !!(data&&(data.sub_status==='active'||data.account_type==='advertiser'));
   }
-  async function enterApp(){document.getElementById('authGate').style.display='none';try{await loadSponsors();await loadTrip();nearAlert(false);}catch(e){}}
+  async function enterApp(){document.getElementById('authGate').style.display='none';try{await loadSponsors();await loadTrip();loadXlsxOffers();nearAlert(false);}catch(e){}}
 
   async function doLogin(){
     if(!SB){enterApp();return;}
@@ -1094,10 +1125,12 @@
   }
   function renderOffers(){
     const host=document.getElementById('offersList');if(!host)return;
+    const promo=XLSXOFFERS.map((o,i)=>{const url=o.url||'#';const tag=o.biz?`<span class="of-tag">★ ${o.biz}</span>`:'';return `<a class="offer promo${i===0?' feat':''}" href="${url}" target="_blank" rel="noopener"><div class="of-ic">${svg('tag')}</div><div class="of-b">${tag}<h4>${o.title||''}</h4><div class="of-s">${o.desc||''}${o.city?' · '+o.city:''}</div></div><span class="ofgo">→</span></a>`;}).join('');
     let list=SPONSORS.filter(s=>s.offer&&s.offer.trim());
     if(USERLOC)list.sort((a,b)=>sponsorDist(a)-sponsorDist(b));
-    if(!list.length){host.innerHTML=`<div class="empty">${at('offersEmpty')}</div>`;return;}
-    host.innerHTML=list.map(s=>{const idx=SPONSORS.indexOf(s),v=vis(s.c);return `<div class="offer" onclick="openSponsor(${idx})"><div class="of-ic" style="background:${v.grad}">${svg(v.icon)}</div><div class="of-b"><span class="of-tag">★ ${s.offer}</span><h4>${s.n}</h4><div class="of-s">${tcat(s.c)} · ${s.city}</div></div></div>`;}).join('');
+    const adv=list.map(s=>{const idx=SPONSORS.indexOf(s),v=vis(s.c);return `<div class="offer" onclick="openSponsor(${idx})"><div class="of-ic" style="background:${v.grad}">${svg(v.icon)}</div><div class="of-b"><span class="of-tag">★ ${s.offer}</span><h4>${s.n}</h4><div class="of-s">${tcat(s.c)} · ${s.city}</div></div></div>`;}).join('');
+    if(!promo&&!adv){host.innerHTML=`<div class="empty">${at('offersEmpty')}</div>`;return;}
+    host.innerHTML=promo+adv;
   }
   async function enableNotifs(){if(!('Notification'in window)){toast('—');return;}let p=Notification.permission;if(p!=='granted')p=await Notification.requestPermission();if(p==='granted')nearAlert(true);}
   function nearAlert(force){if(!('Notification'in window)||Notification.permission!=='granted')return;if(!force&&sessionAlerted)return;sessionAlerted=true;const near=SPONSORS.filter(s=>s.offer&&(!USERLOC||sponsorDist(s)<=40));if(near.length){try{new Notification('App Mexico',{body:near.length+' '+at('tileOffres')+(near[0].city?' · '+near[0].city:''),icon:'icon-192.png'});}catch(e){}}}

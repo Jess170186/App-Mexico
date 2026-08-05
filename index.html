@@ -111,6 +111,16 @@
   .g-em{font-size:30px;line-height:1}
   .g-t{font-weight:700;color:var(--teal2);font-size:13.5px;margin-top:8px}
   .g-s{font-size:11px;color:var(--muted);margin-top:3px}
+  .planchat{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+  .pbub{max-width:84%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.45}
+  .pbub.a{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:4px}
+  .pbub.u{align-self:flex-end;background:var(--teal);color:#fff;border-bottom-right-radius:4px;font-weight:600}
+  .planctrl{display:flex;flex-direction:column;gap:9px}
+  .pchips{display:flex;flex-wrap:wrap;gap:7px}
+  .pchip{background:#fff;border:1px solid var(--line);color:var(--teal2);font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:20px;cursor:pointer}
+  .pchip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .pdates{display:flex;gap:8px}
+  .pdates input{flex:1;padding:11px;border:1px solid var(--line);border-radius:10px;font-size:13px;font-family:inherit;color:var(--ink);background:#fff}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   .tile{background:var(--ivory);border:1px solid var(--line);border-radius:16px;padding:12px 6px 9px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:.15s;box-shadow:0 3px 8px rgba(20,42,43,.05)}
   .tile:active{transform:scale(.95)}
@@ -386,8 +396,15 @@
         <div class="view" id="v-trip">
           <button class="backbtn" onclick="showView('home')">←&nbsp;<span data-i18n="back">Retour</span></button>
           <div class="caps" data-at="tileVoyage">Mon voyage</div>
-          <button class="auth-btn gold" style="margin-bottom:14px" onclick="planDay()" data-at="planDay">Plan ma journée ✨</button>
+          <button class="auth-btn gold" style="margin-bottom:14px" onclick="openPlanner()" id="planBtn">Planifier mon voyage ✨</button>
           <div id="tripList"></div>
+        </div>
+
+        <div class="view" id="v-planner">
+          <button class="backbtn" onclick="showView('trip')">←&nbsp;<span data-i18n="back">Retour</span></button>
+          <div class="caps" id="plannerTitle">Planificateur</div>
+          <div id="planChat" class="planchat"></div>
+          <div id="planCtrl" class="planctrl"></div>
         </div>
 
         <div class="view" id="v-guides">
@@ -461,6 +478,7 @@
     buildGrid();buildCarousel();renderAgenda();renderNews();renderLodging();renderActive();
     if(typeof localizeAuth==='function'){localizeAuth();fillAdvForm();}
     if(typeof renderOffers==='function'){renderOffers();renderTrip();renderGuides();}
+    if(typeof pt==='function'){var _pb=document.getElementById('planBtn');if(_pb)_pb.textContent=pt('gen');var _pt=document.getElementById('plannerTitle');if(_pt)_pt.textContent=pt('title');}
   }
 
   /* ---------- Visuels par catégorie ---------- */
@@ -825,7 +843,7 @@
   document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
 
   /* ---------- Navigation ---------- */
-  const views={home:'v-home',agenda:'v-agenda',news:'v-news',list:'v-list',fav:'v-fav',map:'v-map',plans:'v-plans',search:'v-search',lodging:'v-lodging',offers:'v-offers',trip:'v-trip',guides:'v-guides'};
+  const views={home:'v-home',agenda:'v-agenda',news:'v-news',list:'v-list',fav:'v-fav',map:'v-map',plans:'v-plans',search:'v-search',lodging:'v-lodging',offers:'v-offers',trip:'v-trip',guides:'v-guides',planner:'v-planner'};
   const LODGING=[
     {n:'Salea Homes',u:'https://saleah.stays.net/',dom:'saleah.stays.net',own:true},
     {n:'Booking.com',u:'https://www.booking.com/',dom:'booking.com'},
@@ -1039,6 +1057,68 @@
     g.plan.forEach(cat=>{let pool=[];SPONSORS.forEach(s=>{if(s.c===cat&&inCity(s))pool.push({kind:'sponsor',name:s.n,category:s.c,city:s.city,lat:s.lat,lng:s.lng,_s:1});});PLACES.forEach(p=>{if(p.c===cat&&inCity(p))pool.push({kind:'place',name:p.n,category:p.c,city:p.city,lat:p.lat,lng:p.lng,_s:0});});pool=pool.filter(x=>!used.has(x.name));pool.sort((a,b)=>b._s-a._s);const it=pool[0];if(it){used.add(it.name);chosen.push(it);}});
     if(!chosen.length){toast('—');return;}
     const day=(TRIP.length?Math.max(...TRIP.map(x=>x.day)):0)+1;addTripBatch(chosen,day);}
+
+  /* ================= ASSISTANT VOYAGE (guidé) ================= */
+  const PT={
+    fr:{title:'Planificateur de voyage',welcome:'Salut ! Je te prépare un voyage sur mesure. Réponds à quelques questions 👇',dates:'Tes dates : arrivée et départ ?',region:'Quelle région ?',city:'Quelle ville de base ?',interests:'Qu’est-ce qui te fait envie ? (plusieurs choix, puis « Suivant »)',budget:'Ton budget par jour ?',generating:'Je regarde tes événements, restaurants, plages et activités sur tes dates… ✨',done:'Voilà ton programme, ajouté à « Mon voyage » ! (il remplace le plan précédent)',next:'Suivant',gen:'Générer mon voyage ✨',see:'Voir mon voyage',any:'Peu importe',bLow:'€ · Petit',bMid:'€€ · Moyen',bHigh:'€€€ · Confort',noData:'Je manque de lieux pour cette zone — réessaie avec une autre ville ou « Peu importe ».',restart:'Recommencer'},
+    es:{title:'Planificador de viaje',welcome:'¡Hola! Te preparo un viaje a medida. Responde unas preguntas 👇',dates:'Tus fechas: ¿llegada y salida?',region:'¿Qué región?',city:'¿Ciudad base?',interests:'¿Qué te apetece? (varias opciones, luego «Siguiente»)',budget:'¿Presupuesto por día?',generating:'Reviso tus eventos, restaurantes, playas y actividades en tus fechas… ✨',done:'¡Aquí está tu programa, añadido a «Mi viaje»! (reemplaza el plan anterior)',next:'Siguiente',gen:'Generar mi viaje ✨',see:'Ver mi viaje',any:'Cualquiera',bLow:'€ · Bajo',bMid:'€€ · Medio',bHigh:'€€€ · Alto',noData:'Faltan lugares para esta zona — prueba otra ciudad o «Cualquiera».',restart:'Empezar de nuevo'},
+    en:{title:'Trip planner',welcome:'Hi! I’ll build you a tailored trip. Answer a few questions 👇',dates:'Your dates: arrival and departure?',region:'Which region?',city:'Home base city?',interests:'What are you into? (pick several, then “Next”)',budget:'Budget per day?',generating:'Checking your events, restaurants, beaches and activities for your dates… ✨',done:'Here’s your plan, added to “My trip”! (it replaces the previous plan)',next:'Next',gen:'Generate my trip ✨',see:'See my trip',any:'Any',bLow:'€ · Low',bMid:'€€ · Medium',bHigh:'€€€ · High',noData:'Not enough places for this area — try another city or “Any”.',restart:'Start over'},
+    it:{title:'Pianificatore di viaggio',welcome:'Ciao! Ti preparo un viaggio su misura. Rispondi a qualche domanda 👇',dates:'Le tue date: arrivo e partenza?',region:'Quale regione?',city:'Città base?',interests:'Cosa ti piace? (più scelte, poi «Avanti»)',budget:'Budget al giorno?',generating:'Controllo eventi, ristoranti, spiagge e attività nelle tue date… ✨',done:'Ecco il tuo programma, aggiunto a «Il mio viaggio»! (sostituisce il piano precedente)',next:'Avanti',gen:'Genera il viaggio ✨',see:'Vedi il viaggio',any:'Indifferente',bLow:'€ · Basso',bMid:'€€ · Medio',bHigh:'€€€ · Alto',noData:'Pochi luoghi per questa zona — prova un’altra città.',restart:'Ricomincia'},
+    de:{title:'Reiseplaner',welcome:'Hallo! Ich stelle dir eine passende Reise zusammen. Beantworte ein paar Fragen 👇',dates:'Deine Daten: Ankunft und Abreise?',region:'Welche Region?',city:'Basis-Stadt?',interests:'Worauf hast du Lust? (mehrere, dann „Weiter“)',budget:'Budget pro Tag?',generating:'Ich prüfe Events, Restaurants, Strände und Aktivitäten für deine Daten… ✨',done:'Hier ist dein Plan, zu „Meine Reise“ hinzugefügt! (ersetzt den vorherigen Plan)',next:'Weiter',gen:'Reise generieren ✨',see:'Meine Reise ansehen',any:'Egal',bLow:'€ · Niedrig',bMid:'€€ · Mittel',bHigh:'€€€ · Hoch',noData:'Zu wenige Orte für dieses Gebiet — probiere eine andere Stadt.',restart:'Neu starten'}
+  };
+  function pt(k){return (PT[LANG]&&PT[LANG][k])||PT.fr[k]||k;}
+  const PLAN={from:'',to:'',region:'all',city:'all',interests:[],budget:'€€'};
+  function pSay(html,who){const c=document.getElementById('planChat');if(!c)return;const b=document.createElement('div');b.className='pbub '+(who||'a');b.innerHTML=html;c.appendChild(b);const v=document.getElementById('views');if(v)v.scrollTop=v.scrollHeight;}
+  function pCtrl(html){const c=document.getElementById('planCtrl');if(c)c.innerHTML=html;}
+  function chips(arr,cb){return '<div class="pchips">'+arr.map(a=>`<span class="pchip" onclick="${cb}('${a[0].replace(/'/g,"\\'")}',this)">${a[1]}</span>`).join('')+'</div>';}
+  function openPlanner(){PLAN.from='';PLAN.to='';PLAN.region='all';PLAN.city='all';PLAN.interests=[];PLAN.budget='€€';const pc=document.getElementById('planChat');if(pc)pc.innerHTML='';showView('planner');pSay(pt('welcome'));pStepDates();}
+  function pStepDates(){pSay(pt('dates'));pCtrl(`<div class="pdates"><input type="date" id="pf"><input type="date" id="pt2"></div><button class="auth-btn" onclick="pSetDates()">${pt('next')}</button>`);}
+  function pSetDates(){const f=document.getElementById('pf').value,t=document.getElementById('pt2').value;if(!f){toast('—');return;}PLAN.from=f;PLAN.to=(t&&t>=f)?t:f;pSay(PLAN.from+(PLAN.to!==PLAN.from?(' → '+PLAN.to):''),'u');pStepRegion();}
+  function pStepRegion(){pSay(pt('region'));pCtrl(chips([['all',pt('any')],['Quintana Roo','Quintana Roo'],['Yucatán','Yucatán']],'pSetRegion'));}
+  function pSetRegion(r){PLAN.region=r;PLAN.city='all';pSay(r==='all'?pt('any'):r,'u');pStepCity();}
+  function pStepCity(){const cs=Object.keys(CITY).filter(c=>PLAN.region==='all'||CITY[c].r===PLAN.region);pSay(pt('city'));pCtrl(chips([['all',pt('any')]].concat(cs.map(c=>[c,c])),'pSetCity'));}
+  function pSetCity(c){PLAN.city=c;pSay(c==='all'?pt('any'):c,'u');pStepInterests();}
+  function pStepInterests(){pSay(pt('interests'));const cats=['Playas','Restaurantes','Actividades','Bares','Compras'];pCtrl('<div class="pchips">'+cats.map(c=>`<span class="pchip" id="pi-${c}" onclick="pToggleInt('${c}')">${tcat(c)}</span>`).join('')+`</div><button class="auth-btn" style="margin-top:8px" onclick="pStepBudget()">${pt('next')}</button>`);}
+  function pToggleInt(c){const i=PLAN.interests.indexOf(c);if(i>=0)PLAN.interests.splice(i,1);else PLAN.interests.push(c);const el=document.getElementById('pi-'+c);if(el)el.classList.toggle('on');}
+  function pStepBudget(){pSay(PLAN.interests.length?PLAN.interests.map(tcat).join(', '):pt('any'),'u');pSay(pt('budget'));pCtrl(chips([['€',pt('bLow')],['€€',pt('bMid')],['€€€',pt('bHigh')]],'pSetBudget'));}
+  function pSetBudget(b){PLAN.budget=b;pSay(b,'u');pCtrl(`<button class="auth-btn gold" onclick="pGenerate()">${pt('gen')}</button>`);}
+  function pDiffDays(a,b){if(!a||!b)return 0;try{return Math.round((new Date(b)-new Date(a))/86400000);}catch(e){return 0;}}
+  function pAddDays(a,n){try{const d=new Date(a);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}catch(e){return a;}}
+  async function pGenerate(){
+    pSay(pt('generating'));
+    const days=Math.max(1,Math.min(10,pDiffDays(PLAN.from,PLAN.to)+1));
+    const areaOk=x=>{if(PLAN.city!=='all')return x.city===PLAN.city;if(PLAN.region!=='all')return regionOf(x)===PLAN.region;return true;};
+    const evRange=EVENTS.filter(e=>{const d=e.date_start;if(!d)return false;if(PLAN.from&&d<PLAN.from)return false;if(PLAN.to&&d>PLAN.to)return false;if(PLAN.city!=='all'&&(e.location||'').toLowerCase().indexOf(PLAN.city.toLowerCase())<0)return false;return true;});
+    const used=new Set();
+    const pickCat=cat=>{let pool=[];SPONSORS.forEach(s=>{if(s.c===cat&&areaOk(s)&&!used.has(s.n))pool.push({kind:'sponsor',name:s.n,category:s.c,city:s.city,lat:s.lat,lng:s.lng,_s:1});});PLACES.forEach(p=>{if(p.c===cat&&areaOk(p)&&!used.has(p.n))pool.push({kind:'place',name:p.n,category:p.c,city:p.city,lat:p.lat,lng:p.lng,_s:0});});pool.sort((a,b)=>b._s-a._s);return pool[0];};
+    const wants=c=>!PLAN.interests.length||PLAN.interests.indexOf(c)>=0;
+    let template=[];
+    if(wants('Playas'))template.push('Playas');
+    template.push('Restaurantes');
+    if(wants('Actividades'))template.push('Actividades');
+    if(PLAN.budget==='€€€'&&wants('Compras'))template.push('Compras');
+    if(wants('Bares'))template.push('Bares');
+    if(PLAN.budget==='€'){template=template.filter((c,idx)=>c!=='Bares');} // petit budget : plus léger
+    if(template.length<2)template=['Playas','Restaurantes','Actividades'];
+    const batch=[];
+    for(let d=1;d<=days;d++){
+      template.forEach(cat=>{const it=pickCat(cat);if(it){used.add(it.name);it.day=d;batch.push(it);}});
+      const dayDate=pAddDays(PLAN.from,d-1);
+      evRange.filter(e=>e.date_start===dayDate).forEach(e=>{if(!used.has(e.title)){used.add(e.title);batch.push({kind:'event',name:e.title,category:e.category,city:e.location,lat:null,lng:null,day:d});}});
+    }
+    if(!batch.length){pSay(pt('noData'));pCtrl(`<button class="auth-btn" onclick="openPlanner()">${pt('restart')}</button>`);return;}
+    await pWriteTrip(batch);
+  }
+  async function pWriteTrip(items){
+    if(!SB){toast('—');return;}
+    const {data:{user}}=await SB.auth.getUser();if(!user)return;
+    try{await SB.from('trip_items').delete().eq('owner',user.id);}catch(e){}
+    const rows=items.map(it=>({owner:user.id,day:it.day,kind:it.kind,name:it.name,category:it.category||'',city:it.city||'',lat:it.lat,lng:it.lng}));
+    try{if(rows.length)await SB.from('trip_items').insert(rows);}catch(e){}
+    await loadTrip();
+    pSay(pt('done'));
+    pCtrl(`<button class="auth-btn gold" onclick="showView('trip')">${pt('see')}</button>`);
+  }
 
   async function initAuth(){
     if(!SB){document.getElementById('authGate').style.display='none';return;}

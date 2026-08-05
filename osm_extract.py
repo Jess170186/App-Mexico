@@ -67,7 +67,11 @@ CATS = {
     "Compras":      ['node["shop"="mall"]', 'node["shop"="department_store"]',
                      'node["amenity"="marketplace"]', 'node["shop"="gift"]',
                      'node["shop"="supermarket"]', 'node["shop"="convenience"]',
-                     'way["shop"="mall"]'],
+                     'node["shop"="clothes"]', 'node["shop"="shoes"]',
+                     'node["shop"="bakery"]', 'node["shop"="jewelry"]',
+                     'node["shop"="chemist"]', 'node["amenity"="pharmacy"]',
+                     'node["shop"="greengrocer"]', 'node["shop"="butcher"]',
+                     'way["shop"="mall"]', 'way["shop"="department_store"]'],
     "Playas":       ['node["natural"="beach"]', 'way["natural"="beach"]'],
     "Actividades":  ['node["tourism"="attraction"]', 'node["tourism"="museum"]',
                      'node["tourism"="theme_park"]', 'way["tourism"="attraction"]',
@@ -184,6 +188,7 @@ def run():
                 "website": website, "facebook": fb, "instagram": ig,
                 "gmaps": gmaps_url(round(lat, 6), round(lng, 6)),
                 "img": "", "w": tags.get("internet_access") in ("wlan", "yes"),
+                "sub": (tags.get("shop") or tags.get("amenity") or tags.get("tourism") or ""),
                 "lat": round(lat, 6), "lng": round(lng, 6),
             })
             added += 1

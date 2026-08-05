@@ -103,6 +103,7 @@
   .ti-s,.of-s{font-size:11px;color:var(--muted)}
   .ti-x{color:var(--muted);cursor:pointer;font-size:15px;padding:4px 6px;flex:none}
   .of-tag{display:inline-block;background:var(--gold);color:#3a2e0e;font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px}
+  .paddr{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
   .tripclear{display:inline-block;background:#fff;border:1px solid var(--line);color:#c0392b;font-size:12px;font-weight:700;padding:8px 14px;border-radius:20px;cursor:pointer;margin-bottom:12px}
   .tripclear:active{background:var(--ivory)}
   .toast{position:absolute;left:50%;bottom:88px;transform:translateX(-50%) translateY(10px);background:var(--deep);color:#fff;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:20px;opacity:0;transition:.25s;z-index:150;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25)}
@@ -344,6 +345,7 @@
           <button class="backbtn" onclick="showView('home')">←&nbsp;<span data-i18n="back">Retour</span></button>
           <div class="caps" id="listTitle">Restaurantes</div>
           <div class="filterbar" id="listFilter"></div>
+          <div class="filterbar" id="listSub" style="display:none;margin-top:-4px"></div>
           <div id="listItems"></div>
         </div>
 
@@ -779,13 +781,51 @@
   function renderActive(){if(ACTIVE==='list')renderList();else if(ACTIVE==='fav')renderFav();else if(ACTIVE==='map')renderMap();}
 
   /* ---------- Cartes de lieu ---------- */
-  function placeCard(p,i){const v=vis(p.c);const on=FAV.has(i)?'on':'';const km=USERLOC?`<span class="rate" style="color:var(--teal)">${pd(i).toFixed(1)} km</span>`:'';return `<div class="place" onclick="openPlace(${i})"><div class="pthumb" style="background:${v.grad}"><div class="wm wm-s">${svg(v.icon)}</div>${coverImg(p.img)}</div><div class="pi"><h3>${p.n}</h3><div class="sub">${tcat(p.c)} · ${p.city}</div><div class="rl">${p.rt?`<span class="rate">★ ${p.rt}</span>`:''}${p.w?`<span class="wifiTag">✓ WiFi</span>`:''}${km}</div></div><div class="heart ${on}" onclick="event.stopPropagation();toggleFav(${i})">${svg('heart')}</div></div>`;}
+  function placeCard(p,i){const v=vis(p.c);const on=FAV.has(i)?'on':'';const km=USERLOC?`<span class="rate" style="color:var(--teal)">${pd(i).toFixed(1)} km</span>`:'';const sk=subKey(p);const catl=sk?subT(sk):tcat(p.c);const addr=p.address?`<div class="paddr">📍 ${p.address}</div>`:'';return `<div class="place" onclick="openPlace(${i})"><div class="pthumb" style="background:${v.grad}"><div class="wm wm-s">${svg(v.icon)}</div>${coverImg(p.img)}</div><div class="pi"><h3>${p.n}</h3><div class="sub">${catl} · ${p.city}</div>${addr}<div class="rl">${p.rt?`<span class="rate">★ ${p.rt}</span>`:''}${p.w?`<span class="wifiTag">✓ WiFi</span>`:''}${km}</div></div><div class="heart ${on}" onclick="event.stopPropagation();toggleFav(${i})">${svg('heart')}</div></div>`;}
 
-  function goList(cat){LIST_CAT=cat;LIST_WIFI=(cat==='WiFi');ACTIVE='list';FILTER=defaultFilter();showView('list');renderList();}
+  const SUBT={
+    convenience:{es:'Tiendas de conveniencia',en:'Convenience',fr:'Dépanneurs',it:'Minimarket',de:'Kioske'},
+    supermarket:{es:'Supermercados',en:'Supermarkets',fr:'Épiceries',it:'Supermercati',de:'Supermärkte'},
+    mall:{es:'Centros comerciales',en:'Malls',fr:'Centres comm.',it:'Centri comm.',de:'Malls'},
+    department_store:{es:'Grandes almacenes',en:'Department stores',fr:'Grands magasins',it:'Grandi magazzini',de:'Kaufhäuser'},
+    clothes:{es:'Ropa',en:'Clothing',fr:'Vêtements',it:'Abbigliamento',de:'Kleidung'},
+    shoes:{es:'Zapatos',en:'Shoes',fr:'Chaussures',it:'Scarpe',de:'Schuhe'},
+    gift:{es:'Regalos y souvenirs',en:'Gifts',fr:'Souvenirs',it:'Regali',de:'Geschenke'},
+    marketplace:{es:'Mercados',en:'Markets',fr:'Marchés',it:'Mercati',de:'Märkte'},
+    bakery:{es:'Panaderías',en:'Bakeries',fr:'Boulangeries',it:'Panetterie',de:'Bäckereien'},
+    jewelry:{es:'Joyerías',en:'Jewelry',fr:'Bijouteries',it:'Gioiellerie',de:'Schmuck'},
+    pharmacy:{es:'Farmacias',en:'Pharmacies',fr:'Pharmacies',it:'Farmacie',de:'Apotheken'}
+  };
+  function subT(k){return (SUBT[k]&&(SUBT[k][LANG]||SUBT[k].es))||k;}
+  function subKey(p){
+    if(p.c!=='Compras')return '';
+    if(p.sub&&SUBT[p.sub])return p.sub;
+    const d=(p.d||'').toLowerCase();
+    if(d.indexOf('convenience')>=0)return 'convenience';
+    if(d.indexOf('supermarket')>=0)return 'supermarket';
+    if(d.indexOf('department')>=0)return 'department_store';
+    if(d.indexOf('mall')>=0)return 'mall';
+    if(d.indexOf('cloth')>=0)return 'clothes';
+    if(d.indexOf('shoe')>=0)return 'shoes';
+    if(d.indexOf('gift')>=0||d.indexOf('souvenir')>=0)return 'gift';
+    if(d.indexOf('market')>=0)return 'marketplace';
+    if(d.indexOf('baker')>=0||d.indexOf('panad')>=0)return 'bakery';
+    if(d.indexOf('jewel')>=0)return 'jewelry';
+    if(d.indexOf('pharmac')>=0||d.indexOf('farmac')>=0||d.indexOf('chemist')>=0)return 'pharmacy';
+    return '';
+  }
+  let SUBFILTER='all';
+  function setSub(s){SUBFILTER=s;renderList();}
+  function goList(cat){LIST_CAT=cat;LIST_WIFI=(cat==='WiFi');SUBFILTER='all';ACTIVE='list';FILTER=defaultFilter();showView('list');renderList();}
   function renderList(){
     document.getElementById('listTitle').textContent=tcat(LIST_CAT);
     renderFilters('listFilter');
     let items=PLACES.map((p,i)=>[p,i]).filter(([p])=>(LIST_WIFI?p.w:p.c===LIST_CAT)&&pMatch(p));
+    const subHost=document.getElementById('listSub');
+    const subs=[...new Set(items.map(([p])=>subKey(p)).filter(Boolean))];
+    if(SUBFILTER!=='all'&&subs.indexOf(SUBFILTER)<0)SUBFILTER='all';
+    if(subHost){if(subs.length>1){subHost.style.display='flex';subHost.innerHTML='<div class="frow">'+[['all',t('all_regions')]].concat(subs.sort().map(s=>[s,subT(s)])).map(s=>`<div class="fchip ${SUBFILTER===s[0]?'on':''}" onclick="setSub('${s[0]}')">${s[1]}</div>`).join('')+'</div>';}else{subHost.style.display='none';subHost.innerHTML='';}}
+    if(SUBFILTER!=='all')items=items.filter(([p])=>subKey(p)===SUBFILTER);
     if(USERLOC)items.sort((a,b)=>pd(a[1])-pd(b[1]));
     document.getElementById('listItems').innerHTML=items.length?items.map(([p,i])=>placeCard(p,i)).join(''):`<div class="empty">—</div>`;
   }

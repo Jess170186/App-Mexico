@@ -218,6 +218,15 @@ def run():
             all_events.append(enrich(ev, src))
             time.sleep(0.3)   # courtoisie envers les serveurs sources
 
+    # ---- Ne garder que les événements À VENIR (aujourd'hui → futur) ----
+    today = dt.date.today().isoformat()
+    def still_upcoming(e):
+        end = (e.get("date_end") or e.get("date_start") or "9999-12-31")
+        return end >= today
+    before = len(all_events)
+    all_events = [e for e in all_events if still_upcoming(e)]
+    print(f"   {before - len(all_events)} événement(s) passé(s) ignoré(s)")
+
     # tri par date
     def sort_key(e):
         try:

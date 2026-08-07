@@ -1,27 +1,27 @@
 {
-  "updated_at": "2026-08-07T02:15:17.186627Z",
-  "count": 36,
+  "updated_at": "2026-08-07T07:05:46.775676Z",
+  "count": 35,
   "events": [
     {
-      "title": "Feria de la Cultura y las Artes (FCA)",
+      "title": "Feria de la Cultura y las Artes (FCA) Yucatán",
       "date_start": "2026-07-25",
       "date_end": "2026-08-15",
       "location": "Mérida, Polifórum Zamná / Expomaya",
-      "category": "Arte",
-      "description": "Una de las ferias culturales más grandes del sureste mexicano con artesanías, arte popular, música, teatro, danza, muestras gastronómicas regionales y exposiciones de arte y fotografía.",
-      "detail_url": "https://meridaexperiences.com",
-      "source_url": "https://meridaexperiences.com",
+      "category": "Feria",
+      "description": "Una de las ferias culturales más grandes del sureste de México con artesanías, arte popular, música, teatro, danza, muestras gastronómicas regionales y exposiciones de arte y fotografía.",
+      "detail_url": "<UNKNOWN>",
+      "source_url": "<UNKNOWN>",
       "source_name": "Mérida Experiences (festivals)",
       "region": "Yucatán",
-      "image": "https://meridaexperiences.com/wp-content/uploads/2023/12/Boton-Whatsapp-01-1024x334.webp"
+      "image": ""
     },
     {
-      "title": "Mes de las Juventudes en Cancún",
+      "title": "Actividades por el Mes de las Juventudes",
       "date_start": "2026-08-01",
       "date_end": "2026-08-31",
       "location": "Cancún, Quintana Roo",
       "category": "Cultura",
-      "description": "Cancún prepara diversas actividades durante todo el mes para celebrar a las juventudes con eventos culturales, deportivos y recreativos.",
+      "description": "Programa de actividades culturales, deportivas y recreativas organizadas durante agosto para celebrar a las juventudes cancunenses.",
       "detail_url": "https://quintanaroohoy.com/cultura/",
       "source_url": "https://quintanaroohoy.com/cultura/",
       "source_name": "Quintana Roo Hoy (cultura)",
@@ -29,56 +29,30 @@
       "image": "https://quintanaroohoy.com/wp-content/uploads/2021/01/cropped-Logo_Quintana_Roo_Hoy@sx.png"
     },
     {
-      "title": "Obra de Shinzaburo Takeda en Cancún",
-      "date_start": "2026-08-01",
-      "date_end": "2026-08-10",
-      "location": "Cancún, Quintana Roo",
-      "category": "Arte",
-      "description": "Últimos días para apreciar la exposición del artista Shinzaburo Takeda, una oportunidad única de conocer su obra antes de que concluya.",
-      "detail_url": "https://quintanaroohoy.com/cultura/",
-      "source_url": "https://quintanaroohoy.com/cultura/",
-      "source_name": "Quintana Roo Hoy (cultura)",
-      "region": "Quintana Roo",
-      "image": "https://quintanaroohoy.com/wp-content/uploads/2021/01/cropped-Logo_Quintana_Roo_Hoy@sx.png"
-    },
-    {
-      "title": "Olas Literarias: Yesteryear de Caro Claire Burke",
+      "title": "Primer Congreso Internacional BIO-MAS 2026",
       "date_start": "2026-08-07",
       "date_end": "",
-      "location": "Cancún, Quintana Roo",
+      "location": "Yucatán",
       "category": "Cultura",
-      "description": "Club de lectura que invita a descubrir 'Yesteryear', la novela viral de Caro Claire Burke, en una sesión de discusión literaria.",
-      "detail_url": "https://quintanaroohoy.com/cultura/",
-      "source_url": "https://quintanaroohoy.com/cultura/",
-      "source_name": "Quintana Roo Hoy (cultura)",
-      "region": "Quintana Roo",
-      "image": "https://quintanaroohoy.com/wp-content/uploads/2021/01/cropped-Logo_Quintana_Roo_Hoy@sx.png"
+      "description": "Especialistas de México, Argentina, Colombia y Chile compartirán innovaciones científicas sobre el uso sostenible de recursos vegetales en el campo de la biotecnología.",
+      "detail_url": "https://www.yucatan.gob.mx/index.php",
+      "source_url": "https://www.yucatan.gob.mx/index.php",
+      "source_name": "Gobierno de Yucatán",
+      "region": "Yucatán",
+      "image": "https://www.yucatan.gob.mx/img/share_image.png?v=260504"
     },
     {
-      "title": "Hablemos de lo que no existe",
+      "title": "Feria Yucatán Xmatkuil",
       "date_start": "2026-08-07",
       "date_end": "",
-      "location": "Cancún, Quintana Roo - Teatro Álamos Cancún",
-      "category": "Cultura",
-      "description": "Una obra teatral que lleva relatos paranormales al escenario del Teatro Álamos, explorando historias misteriosas y lo inexplicable.",
-      "detail_url": "https://quintanaroohoy.com/cultura/",
-      "source_url": "https://quintanaroohoy.com/cultura/",
-      "source_name": "Quintana Roo Hoy (cultura)",
-      "region": "Quintana Roo",
-      "image": "https://quintanaroohoy.com/wp-content/uploads/2021/01/cropped-Logo_Quintana_Roo_Hoy@sx.png"
-    },
-    {
-      "title": "Vuela más alto con OV7 y Kabah",
-      "date_start": "2026-08-07",
-      "date_end": "",
-      "location": "Cancún, Quintana Roo",
-      "category": "Música",
-      "description": "El espectáculo 'Vuela más alto' cierra temporada con un gran concierto que reúne los éxitos más emblemáticos de OV7 y Kabah.",
-      "detail_url": "https://quintanaroohoy.com/cultura/",
-      "source_url": "https://quintanaroohoy.com/cultura/",
-      "source_name": "Quintana Roo Hoy (cultura)",
-      "region": "Quintana Roo",
-      "image": "https://quintanaroohoy.com/wp-content/uploads/2021/01/cropped-Logo_Quintana_Roo_Hoy@sx.png"
+      "location": "Mérida, Xmatkuil",
+      "category": "Feria",
+      "description": "Feria tradicional organizada por el Instituto Promotor de Ferias de Yucatán en el municipio de Mérida.",
+      "detail_url": "https://www.yucatan.gob.mx/index.php",
+      "source_url": "https://www.yucatan.gob.mx/index.php",
+      "source_name": "Gobierno de Yucatán",
+      "region": "Yucatán",
+      "image": "https://www.yucatan.gob.mx/img/share_image.png?v=260504"
     },
     {
       "title": "El colibrí",
@@ -86,9 +60,9 @@
       "date_end": "2026-08-16",
       "location": "Yucatán - Centro Cultural Olimpo",
       "category": "Cultura",
-      "description": "Espectáculo de danza que representa la belleza y simbolismo del colibrí, conectando movimiento y naturaleza en una expresión artística única.",
-      "detail_url": "https://mexicoescultura.com",
-      "source_url": "https://mexicoescultura.com",
+      "description": "Espectáculo de danza que representa la delicadeza y simbolismo del colibrí a través de movimientos artísticos.",
+      "detail_url": "https://www.mexicoescultura.com",
+      "source_url": "https://www.mexicoescultura.com",
       "source_name": "México es Cultura — Yucatán",
       "region": "Yucatán",
       "image": "https://mexicoescultura.com/resources/images/front/ficha.jpg"
@@ -99,12 +73,25 @@
       "date_end": "",
       "location": "Yucatán - Teatro del Centro Cultural Carlos Acereto",
       "category": "Música",
-      "description": "Presentación musical basada en el popular videojuego Hollow Knight, ofreciendo una experiencia sonora inmersiva de su banda sonora.",
-      "detail_url": "https://mexicoescultura.com",
-      "source_url": "https://mexicoescultura.com",
+      "description": "Concierto o presentación musical basada en la banda sonora del videojuego Hollow Knight.",
+      "detail_url": "https://www.mexicoescultura.com",
+      "source_url": "https://www.mexicoescultura.com",
       "source_name": "México es Cultura — Yucatán",
       "region": "Yucatán",
       "image": "https://mexicoescultura.com/resources/images/front/ficha.jpg"
+    },
+    {
+      "title": "14° aniversario del Museo Maya de Cancún",
+      "date_start": "2026-08-10",
+      "date_end": "",
+      "location": "Museo Maya de Cancún, Quintana Roo",
+      "category": "Cultura",
+      "description": "Celebración del décimo cuarto aniversario del museo con actividades especiales y exposiciones conmemorativas.",
+      "detail_url": "https://quintanaroohoy.com/cultura/",
+      "source_url": "https://quintanaroohoy.com/cultura/",
+      "source_name": "Quintana Roo Hoy (cultura)",
+      "region": "Quintana Roo",
+      "image": "https://quintanaroohoy.com/wp-content/uploads/2021/01/cropped-Logo_Quintana_Roo_Hoy@sx.png"
     },
     {
       "title": "CA7RIEL & PACO AMOROSO",
@@ -112,12 +99,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "Concierto del dúo argentino CA7RIEL & PACO AMOROSO en su gira Free Spirits. El show inicia a las 21:00 horas.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "Concierto del dúo argentino CA7RIEL & PACO AMOROSO, una propuesta de trap y hip-hop alternativo a las 21:00 hrs.",
+      "detail_url": "https://www.eticket.mx/evento/ca7riel-paco-amoroso-merida",
+      "source_url": "https://www.eticket.mx/evento/ca7riel-paco-amoroso-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "PAULO LONDRA",
@@ -125,20 +112,20 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "Presentación en vivo del artista argentino Paulo Londra, uno de los exponentes más destacados del rap latino contemporáneo.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "El rapero y cantante argentino Paulo Londra se presentará en vivo con su estilo único de trap y rap latino.",
+      "detail_url": "https://www.eticket.mx/evento/paulo-londra-merida",
+      "source_url": "https://www.eticket.mx/evento/paulo-londra-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "Festival del Caribe 2026",
       "date_start": "2026-08-15",
       "date_end": "",
-      "location": "Cancún, Quintana Roo",
+      "location": "Quintana Roo",
       "category": "Cultura",
-      "description": "Se convoca a artistas para participar en este gran evento cultural que celebra la diversidad y riqueza del Caribe con música, danza y arte.",
+      "description": "Convocatoria abierta para artistas que deseen participar en este importante festival dedicado a la cultura caribeña.",
       "detail_url": "https://quintanaroohoy.com/cultura/",
       "source_url": "https://quintanaroohoy.com/cultura/",
       "source_name": "Quintana Roo Hoy (cultura)",
@@ -151,12 +138,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "Concierto del reconocido reguetonero puertorriqueño Arcángel, con sus éxitos más populares del género urbano.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "Concierto del artista urbano de reggaetón Arcángel, uno de los grandes exponentes del género.",
+      "detail_url": "https://www.eticket.mx/evento/arcangel-merida",
+      "source_url": "https://www.eticket.mx/evento/arcangel-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "Ceremonia de entrega del Premio Estatal de las Juventudes 2026",
@@ -164,7 +151,7 @@
       "date_end": "",
       "location": "Mérida, Palacio de Gobierno",
       "category": "Cultura",
-      "description": "Se reconocerá a las y los ganadores seleccionados entre más de 150 postulaciones evaluadas por especialistas, instituciones y sociedad civil.",
+      "description": "Reconocimiento a jóvenes destacados tras evaluación de más de 150 postulaciones por parte de especialistas, instituciones y la sociedad civil.",
       "detail_url": "https://www.yucatan.gob.mx/index.php",
       "source_url": "https://www.yucatan.gob.mx/index.php",
       "source_name": "Gobierno de Yucatán",
@@ -177,9 +164,9 @@
       "date_end": "2026-08-29",
       "location": "Yucatán - Centro Cultural Olimpo",
       "category": "Música",
-      "description": "Presentación musical de un dueto de violas que explora conceptos filosóficos sobre la transitoriedad y la permanencia a través de la música.",
-      "detail_url": "https://mexicoescultura.com",
-      "source_url": "https://mexicoescultura.com",
+      "description": "Presentación musical a cargo de un dueto de violas que explora temas filosóficos sobre lo temporal y lo permanente.",
+      "detail_url": "https://www.mexicoescultura.com",
+      "source_url": "https://www.mexicoescultura.com",
       "source_name": "México es Cultura — Yucatán",
       "region": "Yucatán",
       "image": "https://mexicoescultura.com/resources/images/front/ficha.jpg"
@@ -190,12 +177,12 @@
       "date_end": "",
       "location": "Mérida, Auditorio Coca Cola La Isla Mérida",
       "category": "Música",
-      "description": "Sarai Rivera presenta su tour Inquebrantable con música cristiana contemporánea y mensajes inspiradores.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "Sarai Rivera presenta su tour Inquebrantable, una noche de música cristiana contemporánea.",
+      "detail_url": "https://www.eticket.mx/evento/sarai-rivera-merida",
+      "source_url": "https://www.eticket.mx/evento/sarai-rivera-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "Romance Hollywood",
@@ -203,9 +190,9 @@
       "date_end": "2026-11-26",
       "location": "Yucatán - Centro Cultural Olimpo",
       "category": "Música",
-      "description": "Evento musical inspirado en los romances clásicos del cine de Hollywood, evocando la magia y la nostalgia de las grandes producciones cinematográficas.",
-      "detail_url": "https://mexicoescultura.com",
-      "source_url": "https://mexicoescultura.com",
+      "description": "Concierto musical inspirado en las grandes historias románticas del cine de Hollywood.",
+      "detail_url": "https://www.mexicoescultura.com",
+      "source_url": "https://www.mexicoescultura.com",
       "source_name": "México es Cultura — Yucatán",
       "region": "Yucatán",
       "image": "https://mexicoescultura.com/resources/images/front/ficha.jpg"
@@ -216,9 +203,9 @@
       "date_end": "2026-11-29",
       "location": "Yucatán - Centro Cultural Olimpo",
       "category": "Música",
-      "description": "Un evento musical dedicado a explorar y celebrar la rica historia del samba, presentando los orígenes y evolución de este género musical brasileño.",
-      "detail_url": "https://mexicoescultura.com",
-      "source_url": "https://mexicoescultura.com",
+      "description": "Un evento musical dedicado a explorar y presentar la historia y evolución del samba, género musical brasileño emblemático.",
+      "detail_url": "https://www.mexicoescultura.com",
+      "source_url": "https://www.mexicoescultura.com",
       "source_name": "México es Cultura — Yucatán",
       "region": "Yucatán",
       "image": "https://mexicoescultura.com/resources/images/front/ficha.jpg"
@@ -229,12 +216,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "El icónico dúo mexicano Sin Bandera regresa con su Escenas Tour, interpretando sus baladas románticas más emblemáticas.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "El icónico dúo mexicano-argentino Sin Bandera regresa con su tour Escenas para conquistar a sus fans.",
+      "detail_url": "https://www.eticket.mx/evento/sin-bandera-merida",
+      "source_url": "https://www.eticket.mx/evento/sin-bandera-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "OMAKASE - ÁLVARO DÍAZ",
@@ -242,12 +229,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "Álvaro Díaz presenta su espectáculo Omakase, fusionando música urbana con propuestas innovadoras del artista puertorriqueño.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "El cantante puertorriqueño Álvaro Díaz presenta su show Omakase con su propuesta de trap y R&B alternativo.",
+      "detail_url": "https://www.eticket.mx/evento/alvaro-diaz-merida",
+      "source_url": "https://www.eticket.mx/evento/alvaro-diaz-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "YOUNG MIKO",
@@ -255,12 +242,25 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "Concierto de Young Miko, una de las voces femeninas más prometedoras del trap y reggaetón actual. Incluye paquetes VIP disponibles.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "La rapera y cantante puertorriqueña Young Miko llega a Mérida con su innovador estilo urbano.",
+      "detail_url": "https://www.eticket.mx/evento/young-miko-merida",
+      "source_url": "https://www.eticket.mx/evento/young-miko-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
+    },
+    {
+      "title": "Festival Internacional de Jazz y Blues Mérida",
+      "date_start": "2026-10-01",
+      "date_end": "",
+      "location": "Mérida, Plazas públicas y auditorios culturales",
+      "category": "Música",
+      "description": "Evento musical dedicado al jazz, blues y fusiones contemporáneas con artistas de diferentes países. Ideal para amantes de la música instrumental.",
+      "detail_url": "<UNKNOWN>",
+      "source_url": "<UNKNOWN>",
+      "source_name": "Mérida Experiences (festivals)",
+      "region": "Yucatán",
+      "image": ""
     },
     {
       "title": "MIJARES SINFÓNICO",
@@ -268,7 +268,7 @@
       "date_end": "",
       "location": "Cancún, Plaza de Toros Cancún",
       "category": "Música",
-      "description": "Concierto sinfónico del reconocido cantante mexicano Mijares, presentándose con arreglos orquestales a las 21:00 horas.",
+      "description": "Concierto sinfónico del reconocido cantante mexicano Mijares, que se presentará acompañado de una orquesta a las 21:00 horas.",
       "detail_url": "https://www.eticket.mx/",
       "source_url": "https://www.eticket.mx/",
       "source_name": "eTicket — Cancún",
@@ -281,12 +281,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "La banda mexicana de rock alternativo Enjambre presenta su repertorio de canciones que han marcado generaciones.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "La banda mexicana de rock alternativo Enjambre se presenta en vivo con sus mejores éxitos.",
+      "detail_url": "https://www.eticket.mx/evento/enjambre-merida",
+      "source_url": "https://www.eticket.mx/evento/enjambre-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "DESTINO DOS EQUIS",
@@ -294,12 +294,12 @@
       "date_end": "",
       "location": "Mérida, Hacienda Triunfo",
       "category": "Fiesta",
-      "description": "Festival de música y entretenimiento patrocinado por Dos Equis en un ambiente único dentro de la Hacienda Triunfo.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "Festival al aire libre en la Hacienda Triunfo con música en vivo y experiencias únicas desde las 16:00 hrs.",
+      "detail_url": "https://www.eticket.mx/evento/destino-dos-equis-merida",
+      "source_url": "https://www.eticket.mx/evento/destino-dos-equis-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "MIJARES SINFÓNICO",
@@ -307,12 +307,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "El cantante mexicano Mijares presenta un espectáculo sinfónico con arreglos orquestales de sus canciones más reconocidas.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "El cantante mexicano Mijares presenta un espectáculo sinfónico con sus grandes baladas acompañado de orquesta.",
+      "detail_url": "https://www.eticket.mx/evento/mijares-merida",
+      "source_url": "https://www.eticket.mx/evento/mijares-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "JOSE RAMONES",
@@ -320,7 +320,7 @@
       "date_end": "",
       "location": "Cancún, Teatro Álamos",
       "category": "Música",
-      "description": "Presentación en vivo de Jose Ramones en el Teatro Álamos con inicio a las 21:00 horas.",
+      "description": "Presentación en vivo de Jose Ramones en el Teatro Álamos, con inicio a las 21:00 horas.",
       "detail_url": "https://www.eticket.mx/",
       "source_url": "https://www.eticket.mx/",
       "source_name": "eTicket — Cancún",
@@ -328,30 +328,17 @@
       "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
     },
     {
-      "title": "Festival Internacional de Jazz y Blues Mérida",
-      "date_start": "2026-10-15",
-      "date_end": "",
-      "location": "Mérida, plazas públicas y auditorios culturales",
-      "category": "Música",
-      "description": "Evento musical con artistas de jazz, blues y fusiones contemporáneas, ideal para amantes de la música instrumental y perfecto para viajes de otoño.",
-      "detail_url": "https://meridaexperiences.com",
-      "source_url": "https://meridaexperiences.com",
-      "source_name": "Mérida Experiences (festivals)",
-      "region": "Yucatán",
-      "image": "https://meridaexperiences.com/wp-content/uploads/2023/12/Boton-Whatsapp-01-1024x334.webp"
-    },
-    {
       "title": "KAPO - AFRO ROSA TOUR 2026",
       "date_start": "2026-10-23",
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "Kapo llega con su gira Afro Rosa Tour 2026, compartiendo su propuesta musical urbana con influencias afrolatinas.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "El artista colombiano Kapo trae su tour Afro Rosa 2026 con su mezcla de reggaetón y ritmos afrolatinos.",
+      "detail_url": "https://www.eticket.mx/evento/kapo-merida",
+      "source_url": "https://www.eticket.mx/evento/kapo-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "THE ALAN PARSONS PROJECT",
@@ -359,12 +346,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "Concierto del legendario Alan Parsons interpretando el repertorio de The Alan Parsons Project, clásicos del rock progresivo y art rock.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "El legendario músico y productor Alan Parsons presenta los clásicos de The Alan Parsons Project en concierto.",
+      "detail_url": "https://www.eticket.mx/evento/alan-parsons-merida",
+      "source_url": "https://www.eticket.mx/evento/alan-parsons-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "ÍDOLOS DEL CORAZÓN CON LOS TERRICOLAS, GRUPO YNDIO Y LOS BRIOS",
@@ -372,25 +359,25 @@
       "date_end": "",
       "location": "Mérida, Auditorio Coca Cola La Isla Mérida",
       "category": "Música",
-      "description": "Espectáculo nostálgico que reúne a grupos legendarios de balada romántica latinoamericana de los años 60 y 70.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "Noche nostálgica con tres grupos legendarios de baladas románticas: Los Terricolas, Grupo Yndio y Los Brios.",
+      "detail_url": "https://www.eticket.mx/evento/idolos-del-corazon-merida",
+      "source_url": "https://www.eticket.mx/evento/idolos-del-corazon-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "Día de Muertos en Mérida",
       "date_start": "2026-11-01",
       "date_end": "2026-11-02",
-      "location": "Mérida, cementerios históricos, plazas y centros culturales",
+      "location": "Mérida, Cementerios históricos, plazas y centros culturales",
       "category": "Cultura",
-      "description": "Celebración tradicional mexicana con profundo significado espiritual que incluye altares de muertos en plazas públicas, ofrendas comunitarias, desfiles y actividades culturales con flores y música.",
-      "detail_url": "https://meridaexperiences.com",
-      "source_url": "https://meridaexperiences.com",
+      "description": "Celebración tradicional mexicana con altares de muertos en plazas públicas, ofrendas comunitarias, desfiles y actividades culturales con profundo significado espiritual.",
+      "detail_url": "<UNKNOWN>",
+      "source_url": "<UNKNOWN>",
       "source_name": "Mérida Experiences (festivals)",
       "region": "Yucatán",
-      "image": "https://meridaexperiences.com/wp-content/uploads/2023/12/Boton-Whatsapp-01-1024x334.webp"
+      "image": ""
     },
     {
       "title": "CAIFANES",
@@ -398,12 +385,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "La banda emblemática del rock mexicano Caifanes regresa a Mérida para ofrecer un concierto con sus himnos más queridos.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "La banda icónica de rock mexicano Caifanes regresa con su sonido característico y sus grandes éxitos.",
+      "detail_url": "https://www.eticket.mx/evento/caifanes-merida",
+      "source_url": "https://www.eticket.mx/evento/caifanes-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "DIMASH QUDAIBERGEN",
@@ -411,12 +398,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "El virtuoso cantante kazajo Dimash Qudaibergen presenta su extraordinario rango vocal y repertorio internacional.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "El virtuoso cantante kazajo Dimash Qudaibergen deslumbra con su impresionante rango vocal y repertorio internacional.",
+      "detail_url": "https://www.eticket.mx/evento/dimash-merida",
+      "source_url": "https://www.eticket.mx/evento/dimash-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "BANDALOS CHINOS",
@@ -424,12 +411,12 @@
       "date_end": "",
       "location": "Mérida, Foro GNP Seguros",
       "category": "Música",
-      "description": "La banda argentina de indie pop Bandalos Chinos lleva su energía y canciones frescas al escenario meridano.",
-      "detail_url": "https://www.eticket.mx",
-      "source_url": "https://www.eticket.mx",
+      "description": "La banda argentina de indie pop Bandalos Chinos llega a Mérida con su estilo fresco y contagioso.",
+      "detail_url": "https://www.eticket.mx/evento/bandalos-chinos-merida",
+      "source_url": "https://www.eticket.mx/evento/bandalos-chinos-merida",
       "source_name": "eTicket — Mérida",
       "region": "Yucatán",
-      "image": "https://www.eticket.mx//images/webpage/ogimage_eticket.jpg"
+      "image": ""
     },
     {
       "title": "PANTEÓN ROCOCÓ",
@@ -437,7 +424,7 @@
       "date_end": "",
       "location": "Cancún, Plaza de Toros Cancún",
       "category": "Música",
-      "description": "Concierto de la legendaria banda mexicana de ska Panteón Rococó en la Plaza de Toros, comenzando a las 20:30 horas.",
+      "description": "Concierto de la legendaria banda mexicana de ska Panteón Rococó, que se realizará en la Plaza de Toros a las 20:30 horas.",
       "detail_url": "https://www.eticket.mx/",
       "source_url": "https://www.eticket.mx/",
       "source_name": "eTicket — Cancún",
@@ -450,7 +437,7 @@
       "date_end": "",
       "location": "Cancún, Plaza de Toros Cancún",
       "category": "Música",
-      "description": "Yuridia presenta su gira Las Cartas Sobre La Mesa en concierto a las 21:00 horas en la Plaza de Toros.",
+      "description": "La cantante Yuridia presentará su tour 'Las Cartas Sobre La Mesa' en la Plaza de Toros de Cancún a las 21:00 horas.",
       "detail_url": "https://www.eticket.mx/",
       "source_url": "https://www.eticket.mx/",
       "source_name": "eTicket — Cancún",
@@ -461,14 +448,14 @@
       "title": "Navidad y Posadas en Mérida",
       "date_start": "2026-12-16",
       "date_end": "2026-12-24",
-      "location": "Mérida, parroquias locales y plazas vecinales",
+      "location": "Mérida, Parroquias locales y plazas vecinales",
       "category": "Cultura",
       "description": "Tradición navideña con posadas en barrios tradicionales, villancicos, conciertos navideños y eventos comunitarios familiares en parques.",
-      "detail_url": "https://meridaexperiences.com",
-      "source_url": "https://meridaexperiences.com",
+      "detail_url": "<UNKNOWN>",
+      "source_url": "<UNKNOWN>",
       "source_name": "Mérida Experiences (festivals)",
       "region": "Yucatán",
-      "image": "https://meridaexperiences.com/wp-content/uploads/2023/12/Boton-Whatsapp-01-1024x334.webp"
+      "image": ""
     }
   ]
 }
